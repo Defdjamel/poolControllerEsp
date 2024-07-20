@@ -2,25 +2,28 @@
 #include <Arduino_GFX_Library.h>
 #include <U8g2lib.h>
 #include "wifi.h"
+#include "model/Probe.h"
+
+
 
 #define GFX_BL DF_GFX_BL // default backlight pin, you may replace DF_GFX_BL to actual backlight pin
 
 // 8266 various dev board   : CS: 15, DC:  4, RST:  2, BL:  5, SCK: 14, MOSI: 13, MISO: 12
 /* More data bus class: https://github.com/moononournation/Arduino_GFX/wiki/Data-Bus-Class */
-#define TFT_CS 15 // GFX_NOT_DEFINED for display without CS pin
-#define TFT_DC 5
-#define TFT_RST 4
+//#define TFT_CS 15 // GFX_NOT_DEFINED for display without CS pin
+//#define TFT_DC 4
+#define TFT_RST 2
 
-
+// MISO , CS(to gnd) not need
 Arduino_DataBus *bus = create_default_Arduino_DataBus();
 
 /* More display class: https://github.com/moononournation/Arduino_GFX/wiki/Display-Class */
 // Arduino_GFX *gfx = new Arduino_ILI9341(bus, DF_GFX_RST, 0 /* rotation */, false /* IPS */);
-Arduino_GFX *gfx = new Arduino_ILI9225(bus, 2 /* RST */,1 /* ROTATION*/);
+Arduino_GFX *gfx = new Arduino_ILI9341(bus, TFT_RST /* RST */,1 /* ROTATION*/);
 /*******************************************************************************
  * End of Arduino_GFX setting
  ******************************************************************************/
-uint16_t colorBG  = 0x0000;
+uint16_t colorBG  = 0xCECE;
 
 int xPos = 80;
 int yPos = 64;
@@ -33,13 +36,32 @@ int yDir = 1;
 int xPrev = xPos;
 int yPrev = yPos;
 void testMotion();
+void pumpActive(int second, int8_t pump);
+void setupDisplay();
+
+#define PH_PUMP  16
+#define ORP_PUMP   5
+#define PH_PIN  A0
+Probe phProbe = Probe(PH_PIN,PROBE_PH);
 
 void setup(void)
 {
   Serial.begin(115200);
   // Serial.setDebugOutput(true);
   // while(!Serial);
-  Serial.println("Arduino_GFX Hello World example");
+  Serial.println("Pool Controller V1.0");
+  setupDisplay();
+
+    // Set WiFi to station mode
+  WiFi.mode(WIFI_STA);
+  // Disconnect from an AP if it was previously connected
+  WiFi.disconnect();
+  delay(2000);
+  gfx->fillScreen(LIGHTGREY);
+//  pumpActive(2 , PH_PUMP);
+//  pumpActive(2 , ORP_PUMP);
+}
+void setupDisplay(){
 
 #ifdef GFX_EXTRA_PRE_INIT
   GFX_EXTRA_PRE_INIT();
@@ -50,7 +72,7 @@ void setup(void)
   {
     Serial.println("gfx->begin() failed!");
   }
-  gfx->fillScreen(BLACK);
+  gfx->fillScreen(WHITE);
 
 #ifdef GFX_BL
   pinMode(GFX_BL, OUTPUT);
@@ -74,37 +96,38 @@ void setup(void)
   gfx->setCursor(8, gfx->height()-10);
  
   gfx->println("V1.0");
-    // Set WiFi to station mode
-  WiFi.mode(WIFI_STA);
-
-  // Disconnect from an AP if it was previously connected
-  WiFi.disconnect();
-  delay(2000);
-  gfx->fillScreen(BLACK);
 }
 
 
 void loop()
 {   
 
-testMotion();
-}
+float phVoltage = phProbe.readPHVoltage();
 
+}
+void pumpActive(int second, int8_t pump) {
+   pinMode(pump, OUTPUT);
+  digitalWrite(pump, LOW);   
+  delay(second*1000);              
+  digitalWrite(pump, HIGH);  
+
+
+}
 
 void testMotion(){
   // update the location of the dot
   int sizeCirlcle = 10;
-  long colorCircle = GREEN;
+  long colorCircle = YELLOW;
  
   xPos = xPos + xDir;
   yPos = yPos + yDir;
-  if(xPos >= gfx->width() || xPos <= 0){
+  if(xPos >=(gfx->width() - sizeCirlcle)|| xPos <= (0+ sizeCirlcle)){
 
     xDir = xDir*-1;
 
   }
 
-  if(yPos >= gfx->height() || yPos <= 0){
+  if(yPos >= (gfx->height() - sizeCirlcle) || yPos <= (0 + sizeCirlcle)){
 
    yDir = yDir*-1;
 
@@ -123,7 +146,7 @@ void testMotion(){
  xPrev = xPos;
   yPrev = yPos;
   
-  delay(2);
+  delay(10);
   
 
 }
