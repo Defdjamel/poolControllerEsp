@@ -20,7 +20,21 @@ void startCalibrationPH(Arduino_GFX *gfx, Probe *probe){
 
     //find a and b x1 - x2 / y1 - Y2
     float a  =   voltage1 - voltage1 / (ph1 -ph2);
+    float b   = ph2 - ( a * voltage2);
+    bool isOk = checkCalibrationOK(voltage1, voltage1);
+    if(isOk == true){
+        gfx->println("Calibration OK");
+    }
+    else{
+        gfx->setTextColor(WHITE,RED);
+        gfx->println("Calibration Error");
+    }
 
-
+  
      
+}
+
+bool checkCalibrationOK(float voltage1,float voltage2){
+    return true;
+
 }
