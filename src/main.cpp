@@ -103,10 +103,14 @@ void loop()
 {   
 
 float phVoltage = phProbe.readPHVoltage();
+  gfx->setCursor(8, gfx->height()-10);
+  gfx->print("ph : ");
+   gfx->print(phVoltage);
+    gfx->println(" V");
 
 }
 void pumpActive(int second, int8_t pump) {
-   pinMode(pump, OUTPUT);
+  pinMode(pump, OUTPUT);
   digitalWrite(pump, LOW);   
   delay(second*1000);              
   digitalWrite(pump, HIGH);  
@@ -174,18 +178,7 @@ gfx->fillScreen(BLACK);
  }
  delay(4000);
 }
-void testCircle(){
 
-  // long color = random(0xffff);
-// long minDelay = 100;
-// for(int i = 0; 50; i++ ){
-//   int size = random(50);
-//   int x = random(gfx->width());
-//   int y = random(gfx->height());
-//   gfx->fillCircle(x, y,size,random(0xffff));
-//     gfx->drawCircle(x, y,size,0xCCCC);
-//   delay(40);
-// }
-// delay(100);
+void calibrationPH(){
 
 }

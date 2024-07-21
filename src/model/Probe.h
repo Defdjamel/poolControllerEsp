@@ -11,6 +11,7 @@ Probe(uint8_t analogpin,byte type = PROBE_PH);
  void init(uint8_t analogpin,byte type = PROBE_PH);
  void calibration();
  float readPHVoltage();
+ void startCalibration();
 
 private:
     int _pin ;

@@ -20,3 +20,7 @@ float Probe::readPHVoltage(){
     return voltage;
     
 }
+void Probe::startCalibration(){ // AX + B = Y  A*volt + B = PH
+   
+
+}
