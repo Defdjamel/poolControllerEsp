@@ -2,8 +2,10 @@
 #include <Arduino_GFX_Library.h>
 #include <U8g2lib.h>
 #include "wifi.h"
-#include "model/Probe.h"
 
+#ifndef USE_PROBE_H
+#include "model/Probe.h"
+#endif 
 
 
 #define GFX_BL DF_GFX_BL // default backlight pin, you may replace DF_GFX_BL to actual backlight pin
@@ -96,17 +98,25 @@ void setupDisplay(){
   gfx->setCursor(8, gfx->height()-10);
  
   gfx->println("V1.0");
+  delay(1000);
 }
 
 
 void loop()
 {   
-
+gfx->fillScreen(WHITE);
 float phVoltage = phProbe.readPHVoltage();
-  gfx->setCursor(8, gfx->height()-10);
+gfx->setTextColor(BLACK,0);
+  gfx->setCursor(8, gfx->height()/2);
   gfx->print("ph : ");
-   gfx->print(phVoltage);
-    gfx->println(" V");
+  gfx->print(phVoltage);
+  gfx->println(" V");
+
+    gfx->print("  ");
+  gfx->println(millis());
+    delay(1000);
+    phProbe.startCalibrationPH(gfx);
+
 
 }
 void pumpActive(int second, int8_t pump) {
