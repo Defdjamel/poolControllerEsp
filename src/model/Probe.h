@@ -3,10 +3,14 @@
 #define USE_PROBE_H
 #endif
 
-
 #ifndef _ARDUINO_GFX_LIBRARIES_H_
 #include <Arduino_GFX_Library.h>
 #endif 
+
+#ifndef USE_CONFIG_H
+#include "helper/Config.h"
+#endif
+
 
 #include "Arduino.h"
 

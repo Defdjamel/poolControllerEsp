@@ -54,6 +54,10 @@ void Probe::startCalibrationPH(Arduino_GFX *gfx){
           gfx->print("B: ");
           gfx->println(b);
           delay(30*1000);
+          Config config =  Config();
+          config.ph_a= a;
+          config.ph_b = b;
+          config.saveConfig();
     }
     else{
         gfx->setTextColor(WHITE,RED);
@@ -65,7 +69,7 @@ bool Probe::checkCalibrationOK(float voltage1,float voltage2){
     return true;
 }
 
-void Probe::staticFunction(float f){
+void Probe::staticFunction(float t){
 
 }
 

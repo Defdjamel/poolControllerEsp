@@ -86,7 +86,7 @@ void setupDisplay(){
   
   gfx->setFont(u8g2_font_tenthinguys_t_all);
   gfx->println(title);
-    gfx->setTextColor(WHITE);
+    gfx->setTextColor(BLACK);
       gfx->setFont(u8g2_font_helvB08_te);
    gfx->print( " screen: ");
    gfx->print( gfx->width());
