@@ -62,6 +62,11 @@ void setup(void)
   gfx->fillScreen(LIGHTGREY);
 //  pumpActive(2 , PH_PUMP);
 //  pumpActive(2 , ORP_PUMP);
+
+float test = -5.6;
+ Serial.println(test);
+ phProbe.startCalibrationPH(gfx);
+
 }
 void setupDisplay(){
 
@@ -98,27 +103,25 @@ void setupDisplay(){
   gfx->setCursor(8, gfx->height()-10);
  
   gfx->println("V1.0");
-  delay(1000);
+  delay(2000);
+   
 }
 
 
 void loop()
 {   
-gfx->fillScreen(WHITE);
-float phVoltage = phProbe.readPHVoltage();
-gfx->setTextColor(BLACK,0);
+  gfx->fillScreen(WHITE);
+  float phVoltage = phProbe.readPH();
+  gfx->setTextColor(BLACK,0);
   gfx->setCursor(8, gfx->height()/2);
   gfx->print("ph : ");
   gfx->print(phVoltage);
-  gfx->println(" V");
-
-    gfx->print("  ");
+  gfx->print("");
   gfx->println(millis());
-    delay(1000);
-    phProbe.startCalibrationPH(gfx);
-
+  delay(4000);
 
 }
+
 void pumpActive(int second, int8_t pump) {
   pinMode(pump, OUTPUT);
   digitalWrite(pump, LOW);   
@@ -187,8 +190,4 @@ gfx->fillScreen(BLACK);
 
  }
  delay(4000);
-}
-
-void calibrationPH(){
-
 }

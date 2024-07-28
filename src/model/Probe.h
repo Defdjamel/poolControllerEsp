@@ -23,6 +23,7 @@ public:
 
 Probe(uint8_t analogpin,byte type = PROBE_PH);
 float readPHVoltage();
+float readPH();
 void startCalibrationPH(Arduino_GFX *gfx);
 bool checkCalibrationOK( float voltage1, float voltage2);
 static void staticFunction(float f);
