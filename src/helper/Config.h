@@ -11,6 +11,7 @@ class Config{
         Config();  
         float ph_a;
         float ph_b;
+        float orp_offset;
        
         void saveConfig();
     private:

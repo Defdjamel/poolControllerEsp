@@ -22,17 +22,19 @@ class Probe
 public:
 
 Probe(uint8_t analogpin,byte type = PROBE_PH);
-float readPHVoltage();
+float readVoltage();
 float readPH();
 void startCalibrationPH(Arduino_GFX *gfx);
+void startCalibrationORP(Arduino_GFX *gfx);
 bool checkCalibrationOK( float voltage1, float voltage2);
-static void staticFunction(float f);
+
 
 private:
     int _pin ;
     byte _type ;
     int sampless = 10;
-    float adc_resolutions = 1024.0;     
+    float adc_resolutions = 1024.0;
+    Config configProbe ;    
 
 
 };

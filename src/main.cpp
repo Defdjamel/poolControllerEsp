@@ -2,6 +2,7 @@
 #include <Arduino_GFX_Library.h>
 #include <U8g2lib.h>
 #include "wifi.h"
+#include "helper/Constants.h"
 
 #ifndef USE_PROBE_H
 #include "model/Probe.h"
@@ -44,7 +45,9 @@ void setupDisplay();
 #define PH_PUMP  16
 #define ORP_PUMP   5
 #define PH_PIN  A0
-Probe phProbe = Probe(PH_PIN,PROBE_PH);
+#define PH_VCC  0
+Probe phProbe = Probe(PH_PIN, PROBE_PH);
+Probe orpProbe = Probe(PH_PIN, ORP_PH);
 
 void setup(void)
 {
@@ -60,12 +63,13 @@ void setup(void)
   WiFi.disconnect();
   delay(2000);
   gfx->fillScreen(LIGHTGREY);
-//  pumpActive(2 , PH_PUMP);
-//  pumpActive(2 , ORP_PUMP);
+  // pumpActive(2 , PH_PUMP);
+  //delay(2000);
+  // pumpActive(2 , ORP_PUMP);
 
-float test = -5.6;
- Serial.println(test);
- phProbe.startCalibrationPH(gfx);
+ //phProbe.startCalibrationPH(gfx);
+ connectWifi(WIFI_ssid , WIFI_password);
+
 
 }
 void setupDisplay(){
@@ -109,9 +113,8 @@ void setupDisplay(){
 
 
 void loop()
-{   
+{   float phVoltage = phProbe.readPH();
   gfx->fillScreen(WHITE);
-  float phVoltage = phProbe.readPH();
   gfx->setTextColor(BLACK,0);
   gfx->setCursor(8, gfx->height()/2);
   gfx->print("ph : ");
@@ -119,7 +122,19 @@ void loop()
   gfx->print("");
   gfx->println(millis());
   delay(4000);
+  String n[2][2] = {{"A","Hello"},{"size",String(millis()/1000)}};
+   WifiHelper::sendPostRequest(SERVER_HOST, "/d", 80 , n);
 
+}
+void readOrp(){
+   gfx->fillScreen(WHITE);
+  float orpVal = orpProbe.readVoltage();
+  gfx->setTextColor(BLACK,0);
+  gfx->setCursor(8, gfx->height()/2);
+  gfx->print("ORP : ");
+  gfx->print(orpVal);
+  gfx->println(" mV");
+  gfx->println(millis());
 }
 
 void pumpActive(int second, int8_t pump) {

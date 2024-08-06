@@ -2,10 +2,12 @@
 #include "Probe.h"
 
 Probe::Probe(uint8_t analogpin,byte type ){
-pinMode(analogpin,OUTPUT);
+pinMode(analogpin,INPUT);
+configProbe =  Config();
 }
 
-float Probe::readPHVoltage(){
+
+float Probe::readVoltage(){
      int measurings=0;
     for (int i = 0; i < sampless; i++)
     {
@@ -20,10 +22,10 @@ float Probe::readPHVoltage(){
     
 }
 float Probe::readPH(){
-    Config config =  Config();
-    Serial.printf("ph_a= %f , ph_b= %f \n\r",config.ph_a,config.ph_b);
-    float voltage = readPHVoltage();
-    float ph = voltage * config.ph_a + config.ph_b;
+   
+    Serial.printf("ph_a= %f , ph_b= %f \n\r",configProbe.ph_a,configProbe.ph_b);
+    float voltage = readVoltage();
+    float ph = voltage * configProbe.ph_a + configProbe.ph_b;
     Serial.printf("PH= %f \n\r",ph);
     return ph;
 }
@@ -37,20 +39,21 @@ void Probe::startCalibrationPH(Arduino_GFX *gfx){
     delay(timeProbing * 1000);
     //read voltage ph = 4.01
     float ph1 = 4.01;
-    float  voltage1   = this->readPHVoltage();
+    float  voltage1   = this->readVoltage();
 
     gfx->fillScreen(WHITE);
     gfx->setCursor(8, gfx->height()/2);
      gfx->setTextColor(RED);
-     gfx->printf("put PH 9.18 in %d sec", timeProbing );
+      float ph2 = 6.86;
+     gfx->printf("put PH %f in %d sec",ph2, timeProbing );
     delay(timeProbing * 1000);
 
     // read voltage ph = 9.18
-    float ph2 = 9.18;
-    float  voltage2   = this->readPHVoltage();
+   
+    float  voltage2   = this->readVoltage();
 
     //find a and b x1 - x2 / y1 - Y2
-    float a  =   (voltage2 - voltage1) / (ph2 -ph1);
+    float a  =  (ph2 -ph1) / (voltage2 - voltage1);
     float b   = ph2 - ( a * voltage2);
     bool isOk = checkCalibrationOK(voltage1, voltage2);
     if(isOk == true){
@@ -67,6 +70,7 @@ void Probe::startCalibrationPH(Arduino_GFX *gfx){
         config.ph_a = a;
         config.ph_b = b;
         config.saveConfig();
+        configProbe = config;
         delay(10*1000);
     }
     else{
@@ -75,11 +79,11 @@ void Probe::startCalibrationPH(Arduino_GFX *gfx){
     }   
 }
 
+void Probe::startCalibrationORP(Arduino_GFX *gfx){
+}
+
 bool Probe::checkCalibrationOK(float voltage1,float voltage2){
     return true;
 }
 
-void Probe::staticFunction(float t){
-
-}
 
