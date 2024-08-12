@@ -1,28 +1,25 @@
 
 #include <Arduino_GFX_Library.h>
 #include <U8g2lib.h>
-#include "wifi.h"
+
 #include "helper/Constants.h"
+
+#if LV_USE_TFT_ESPI
+#include <TFT_eSPI.h>
+#endif
 
 #ifndef USE_PROBE_H
 #include "model/Probe.h"
 #endif 
 
-
-#define GFX_BL DF_GFX_BL // default backlight pin, you may replace DF_GFX_BL to actual backlight pin
-
-// 8266 various dev board   : CS: 15, DC:  4, RST:  2, BL:  5, SCK: 14, MOSI: 13, MISO: 12
-/* More data bus class: https://github.com/moononournation/Arduino_GFX/wiki/Data-Bus-Class */
-//#define TFT_CS 15 // GFX_NOT_DEFINED for display without CS pin
-//#define TFT_DC 4
-#define TFT_RST 2
+#define TFT_RST  -1 
 
 // MISO , CS(to gnd) not need
 Arduino_DataBus *bus = create_default_Arduino_DataBus();
 
 /* More display class: https://github.com/moononournation/Arduino_GFX/wiki/Display-Class */
 // Arduino_GFX *gfx = new Arduino_ILI9341(bus, DF_GFX_RST, 0 /* rotation */, false /* IPS */);
-Arduino_GFX *gfx = new Arduino_ILI9341(bus, TFT_RST /* RST */,1 /* ROTATION*/);
+Arduino_GFX *gfx = new Arduino_ILI9341(bus, TFT_RST /* RST */,0 /* ROTATION*/);
 /*******************************************************************************
  * End of Arduino_GFX setting
  ******************************************************************************/
@@ -56,19 +53,20 @@ void setup(void)
   // while(!Serial);
   Serial.println("Pool Controller V1.0");
   setupDisplay();
+  
 
     // Set WiFi to station mode
-  WiFi.mode(WIFI_STA);
+ // WiFi.mode(WIFI_STA);
   // Disconnect from an AP if it was previously connected
-  WiFi.disconnect();
+  //WiFi.disconnect();
   delay(2000);
-  gfx->fillScreen(LIGHTGREY);
+  gfx->fillScreen(BLUE);
   // pumpActive(2 , PH_PUMP);
   //delay(2000);
   // pumpActive(2 , ORP_PUMP);
 
  //phProbe.startCalibrationPH(gfx);
- connectWifi(WIFI_ssid , WIFI_password);
+ //connectWifi(WIFI_ssid , WIFI_password);
 
 
 }
@@ -85,10 +83,7 @@ void setupDisplay(){
   }
   gfx->fillScreen(WHITE);
 
-#ifdef GFX_BL
-  pinMode(GFX_BL, OUTPUT);
-  digitalWrite(GFX_BL, HIGH);
-#endif
+
   String title = "Pool Controller" ;
   gfx->setCursor(gfx->width()/2 - title.length()*7 / 2 , 20);
   gfx->setTextColor(RED);
@@ -113,8 +108,10 @@ void setupDisplay(){
 
 
 void loop()
-{   float phVoltage = phProbe.readPH();
-  gfx->fillScreen(WHITE);
+{   
+   testMotion();return;
+  float phVoltage = phProbe.readPH();
+  gfx->fillScreen(RED);
   gfx->setTextColor(BLACK,0);
   gfx->setCursor(8, gfx->height()/2);
   gfx->print("ph : ");
@@ -123,7 +120,7 @@ void loop()
   gfx->println(millis());
   delay(4000);
   String n[2][2] = {{"A","Hello"},{"size",String(millis()/1000)}};
-   WifiHelper::sendPostRequest(SERVER_HOST, "/d", 80 , n);
+  // WifiHelper::sendPostRequest(SERVER_HOST, "/d", 80 , n);
 
 }
 void readOrp(){
@@ -183,26 +180,26 @@ void testMotion(){
 
 }
 
-void testWifi(){
+// void testWifi(){
 
-gfx->fillScreen(BLACK);
- gfx->setCursor(10, 10);
-String wifiList[3]={"","",""};
+// gfx->fillScreen(BLACK);
+//  gfx->setCursor(10, 10);
+// String wifiList[3]={"","",""};
  
-  gfx->print("SCANNING...");delay(100);
-scanForWifi(wifiList);
-gfx->fillScreen(BLACK);
- gfx->setCursor(10, 10);
+//   gfx->print("SCANNING...");delay(100);
+// scanForWifi(wifiList);
+// gfx->fillScreen(BLACK);
+//  gfx->setCursor(10, 10);
   
-  gfx->println("SCAN RESULT : ");
- for(int i = 0; i<3; i++ ){
+//   gfx->println("SCAN RESULT : ");
+//  for(int i = 0; i<3; i++ ){
   
-  gfx->setTextColor(WHITE,BLUE);
+//   gfx->setTextColor(WHITE,BLUE);
  
-  gfx->setFont(u8g2_font_DigitalDisco_tf);
+//   gfx->setFont(u8g2_font_DigitalDisco_tf);
   
-  gfx->println(wifiList[i]);
+//   gfx->println(wifiList[i]);
 
- }
- delay(4000);
-}
+//  }
+//  delay(4000);
+// }
