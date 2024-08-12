@@ -3,9 +3,6 @@
 #define USE_PROBE_H
 #endif
 
-#ifndef _ARDUINO_GFX_LIBRARIES_H_
-#include <Arduino_GFX_Library.h>
-#endif 
 
 #ifndef USE_CONFIG_H
 #include "helper/Config.h"
@@ -24,8 +21,7 @@ public:
 Probe(uint8_t analogpin,byte type = PROBE_PH);
 float readVoltage();
 float readPH();
-void startCalibrationPH(Arduino_GFX *gfx);
-void startCalibrationORP(Arduino_GFX *gfx);
+void startCalibrationPH();
 bool checkCalibrationOK( float voltage1, float voltage2);
 
 
@@ -33,7 +29,7 @@ private:
     int _pin ;
     byte _type ;
     int sampless = 10;
-    float adc_resolutions = 1024.0;
+    float adc_resolutions = 4095.0;
     Config configProbe ;    
 
 
