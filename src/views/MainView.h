@@ -2,13 +2,12 @@
 #include "HomeView.h"
 #include "SettingsView.h"
 
-
+  lv_obj_t * tabview;
 void createMainView();
 
 
 
 void createMainView(){
-     lv_obj_t * tabview;
     tabview = lv_tabview_create(lv_screen_active());
     lv_obj_t * tab1 = lv_tabview_add_tab(tabview, LV_SYMBOL_HOME);
     lv_obj_t * tab2 = lv_tabview_add_tab(tabview,LV_SYMBOL_CHARGE );
@@ -51,6 +50,6 @@ lv_obj_set_style_text_font(tab2, &lv_font_montserrat_16, LV_PART_MAIN| LV_STATE_
     lv_obj_set_style_arc_color(spinner,lv_palette_main(LV_PALETTE_RED),LV_PART_INDICATOR);
     lv_spinner_set_anim_params(spinner, 1000, 200);
 
-    //lv_obj_scroll_to_view_recursive(label, LV_ANIM_ON);
+    lv_obj_scroll_to_view_recursive(tab3, LV_ANIM_ON);
 
 }
