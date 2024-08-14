@@ -70,3 +70,5 @@ void createSettingView(lv_obj_t *parent)
 
   
 }
+
+

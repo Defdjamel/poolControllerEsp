@@ -1,9 +1,7 @@
 #include <lvgl.h>
 #include <TFT_eSPI.h>
 #include <XPT2046_Bitbang.h>
-#include "../helper/Fontawesome.c"
-#include "../helper/FontIcons.h"
-LV_FONT_DECLARE(Fontawesome);
+
 
 
 
@@ -15,17 +13,36 @@ LV_FONT_DECLARE(Fontawesome);
 #define FONT_SIZE 1
 
 
-#define DRAW_BUF_SIZE (TFT_HOR_RES * TFT_VER_RES / 10 * (LV_COLOR_DEPTH / 8))
-uint32_t draw_buf[DRAW_BUF_SIZE / 4];
+
+static lv_disp_draw_buf_t draw_buf;
+static lv_color_t buf[ TFT_HOR_RES * TFT_VER_RES / 10 ];
+
+TFT_eSPI tft = TFT_eSPI(TFT_HOR_RES, TFT_VER_RES);
 XPT2046_Bitbang touchscreen(XPT2046_MOSI, XPT2046_MISO, XPT2046_CLK, XPT2046_CS);
+
 
 
 void setupDisplay();
 void setupTouchScreen();
+void my_touchpad_read( lv_indev_drv_t * indev_drv, lv_indev_data_t * data );
 
+/* Display flushing */
+void my_disp_flush( lv_disp_drv_t *disp_drv, const lv_area_t *area, lv_color_t *color_p )
+{
+    uint32_t w = ( area->x2 - area->x1 + 1 );
+    uint32_t h = ( area->y2 - area->y1 + 1 );
+
+    tft.startWrite();
+    tft.setAddrWindow( area->x1, area->y1, w, h );
+    tft.pushColors( ( uint16_t * )&color_p->full, w * h, true );
+    tft.endWrite();
+
+    lv_disp_flush_ready( disp_drv );
+}
 
 // Get the Touchscreen data
-void touchscreen_read(lv_indev_t * indev, lv_indev_data_t * data) {
+// void touchscreen_read(lv_indev_t * indev, lv_indev_data_t * data) {
+  void my_touchpad_read( lv_indev_drv_t * indev_drv, lv_indev_data_t * data ){
   // Checks if Touchscreen was touched, and prints X, Y and Pressure (Z)
     TouchPoint touch = touchscreen.getTouch();
  // if(touchscreen.tirqTouched() && touchscreen.touched()) {
@@ -58,27 +75,37 @@ void touchscreen_read(lv_indev_t * indev, lv_indev_data_t * data) {
 }
 
 void setupDisplay(){
-  lv_init();
-  lv_display_t * disp;
-   //lv_disp_set_rotation(disp,TFT_ROTATION);
-  #if LV_USE_TFT_ESPI
-    /*TFT_eSPI can be enabled lv_conf.h to initialize the display in a simple way*/
-    disp = lv_tft_espi_create(TFT_HOR_RES, TFT_VER_RES, draw_buf, sizeof(draw_buf));
-    
-  #else
-    /*Else create a display yourself*/
-    disp = lv_display_create(TFT_HOR_RES, TFT_VER_RES);
-    lv_display_set_flush_cb(disp, my_disp_flush);
-    lv_display_set_buffers(disp, draw_buf, NULL, sizeof(draw_buf), LV_DISPLAY_RENDER_MODE_PARTIAL);
-  #endif
+      lv_init();
+
+      tft.begin();          /* TFT init */
+      tft.setRotation( 3 ); /* Landscape orientation, flipped */
+
+      lv_disp_draw_buf_init( &draw_buf, buf, NULL, TFT_HOR_RES * TFT_VER_RES / 10 );
+
+      /*Initialize the display*/
+      static lv_disp_drv_t disp_drv;
+      lv_disp_drv_init( &disp_drv );
+      /*Change the following line to your display resolution*/
+      disp_drv.hor_res = TFT_HOR_RES;
+      disp_drv.ver_res = TFT_VER_RES;
+      disp_drv.flush_cb = my_disp_flush;
+      disp_drv.draw_buf = &draw_buf;
+      lv_disp_drv_register( &disp_drv );
+
 
 }
 void setupTouchScreen(){
     touchscreen.begin();
    //  // Initialize an LVGL input device object (Touchscreen)
-    lv_indev_t * indev = lv_indev_create();
-    lv_indev_set_type(indev, LV_INDEV_TYPE_POINTER);
-    // // Set the callback function to read Touchscreen input
-    lv_indev_set_read_cb(indev, touchscreen_read);
+    // lv_indev_t * indev = lv_indev_create();
+    // lv_indev_set_type(indev, LV_INDEV_TYPE_POINTER);
+    // // // Set the callback function to read Touchscreen input
+    // lv_indev_set_read_cb(indev, touchscreen_read);
+
+    static lv_indev_drv_t indev_drv;
+    lv_indev_drv_init( &indev_drv );
+    indev_drv.type = LV_INDEV_TYPE_POINTER;
+    indev_drv.read_cb = my_touchpad_read;
+    lv_indev_drv_register( &indev_drv );
 }
 

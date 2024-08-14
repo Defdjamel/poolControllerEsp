@@ -2,6 +2,7 @@
 #include "settings/Display_settings.h"
 #include "views/MainView.h"
 
+
 #if LV_USE_TFT_ESPI
 #include <TFT_eSPI.h>
 #endif
@@ -9,6 +10,7 @@
 #ifndef USE_PROBE_H
 #include "model/Probe.h"
 #endif 
+#include "WifiManager.h"
 
 void my_log_cb(lv_log_level_t level, const char * buf);
 void pumpActive(int second, int8_t pump);
@@ -29,7 +31,7 @@ void setup(void)
   setupTouchScreen();
 
     // Set WiFi to station mode
- // WiFi.mode(WIFI_STA);
+ 
   // Disconnect from an AP if it was previously connected
   //WiFi.disconnect();
   delay(2000);
@@ -38,9 +40,13 @@ void setup(void)
   // pumpActive(2 , ORP_PUMP);
 
  //phProbe.startCalibrationPH(gfx);
- //connectWifi(WIFI_ssid , WIFI_password);
+//  connectWifi("WIFI_ssid" , "WIFI_password");
 
- createMainView();
+   
+ 
+
+createMainView();
+ //int scanResult = WiFi.scanNetworks(/*async=*/false, /*hidden=*/true);
 }
 
 void loop()

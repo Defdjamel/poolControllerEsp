@@ -1,39 +1,42 @@
+#include "WifiManager.h"
+// #include "WiFi.h"
 
-// #include "wifi.h"
-// void connectWifi(String ssid, String  password){
-//   delay(10);
-//   Serial.println('\n');
+void connectWifi(String ssid, String  password){
+   WiFi.disconnect();
+   WiFi.mode(WIFI_STA);
+  delay(10);
+  Serial.println('\n');
   
-//   WiFi.begin(ssid, password);             // Connect to the network
-//   Serial.print("Connecting to ");
-//   Serial.print(ssid); Serial.println(" ...");
+  WiFi.begin(ssid, password);             // Connect to the network
+  Serial.print("Connecting to ");
+  Serial.print(ssid); Serial.println(" ...");
 
-//   int i = 0;
-//   int delayMax = 30;
-//   while (WiFi.status() != WL_CONNECTED && i < delayMax ) { // Wait for the Wi-Fi to connect
-//     delay(1000);
-//     Serial.print(++i); Serial.print(' ');
-//   }
-//   if( i >= delayMax){
-//      Serial.println("Connection Error :(");  
-//      return;
-//   }
+  int i = 0;
+  int delayMax = 30;
+  while (WiFi.status() != WL_CONNECTED && i < delayMax ) { // Wait for the Wi-Fi to connect
+    delay(1000);
+    Serial.print(++i); Serial.print(' ');
+  }
+  if( i >= delayMax){
+     Serial.println("Connection Error :(");  
+     return;
+  }
 
-//   Serial.println('\n');
-//   Serial.println("Connection established!");  
-//   Serial.print("IP address:\t");
-//   Serial.println(WiFi.localIP());   
+  Serial.println('\n');
+  Serial.println("Connection established!");  
+  Serial.print("IP address:\t");
+  Serial.println(WiFi.localIP());   
 
-// };
+};
 
 
-// void scanForWifi(String wifiList[3]){
+// void scanForWifi(char* wifiList[MaxWifiScan]){
 //    String ssid;
 //   int32_t rssi;
 //   uint8_t encryptionType;
 //   uint8_t* bssid;
 //   int32_t channel;
-//   bool hidden;
+//     // bool hidden;
 //   int scanResult;
 
 
@@ -50,10 +53,10 @@
 //     // Print unsorted scan results
 //     for (int8_t i = 0; i < scanResult; i++) {
      
-//       WiFi.getNetworkInfo(i, ssid, encryptionType, rssi, bssid, channel, hidden);
+//       WiFi.getNetworkInfo(i, ssid, encryptionType, rssi, bssid, channel);
      
 //     Serial.println(ssid.c_str());
-//     wifiList[i] = ssid.c_str();
+//     wifiList[i] = "dsds";
 //       // Serial.printf(PSTR("  %02d: [CH %02d] [%02X:%02X:%02X:%02X:%02X:%02X] %ddBm %c %c %s\n"),
 //       //               i,
 //       //               channel,

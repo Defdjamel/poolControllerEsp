@@ -1,8 +1,10 @@
+#include "WiFi.h"
 // #include <ESP8266WiFi.h>
 // #include <WiFiClientSecure.h>
 // #include <ESP8266HTTPClient.h>
-// void scanForWifi(String wifiList[3]);
-// void connectWifi(String ssid, String password);
+#define MaxWifiScan 5
+//  void scanForWifi(char* wifiList[MaxWifiScan]);
+ void connectWifi(String ssid, String password);
 // String sendPostRequest(char* host,char* url, int port, String params);
 
 // class WifiHelper{
