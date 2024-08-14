@@ -14,6 +14,7 @@
 
 void my_log_cb(lv_log_level_t level, const char * buf);
 void pumpActive(int second, int8_t pump);
+void testTFT();
 
 unsigned long timer = millis();
 
@@ -41,12 +42,27 @@ void setup(void)
 
  //phProbe.startCalibrationPH(gfx);
 //  connectWifi("WIFI_ssid" , "WIFI_password");
-
-   
- 
+  
+  // We can now plot text on screen using the "print" class
 
 createMainView();
  //int scanResult = WiFi.scanNetworks(/*async=*/false, /*hidden=*/true);
+
+
+  // testTFT();
+  
+}
+void testTFT(){
+  tft.fillScreen(TFT_WHITE);
+  
+  // Set "cursor" at top left corner of display (0,0) and select font 2
+  // (cursor will move to next line automatically during printing with 'tft.println'
+  //  or stay on the line is there is room for the text with tft.print)
+  tft.setCursor(0, 0, 2);
+  // Set the font colour to be white with a black background, set text size multiplier to 1
+  tft.setTextColor(0x4c3c,TFT_BLACK);  tft.setTextSize(1);
+  // We can now plot text on screen using the "print" class
+  tft.println("Hello World!");
 }
 
 void loop()
@@ -61,9 +77,9 @@ void loop()
     char buffer[6];
     sprintf(buffer, "%.2f", phVoltage);
     timer = millis();
- }
+ } 
   
-  // delay(4000);
+  
   // String n[2][2] = {{"A","Hello"},{"size",String(millis()/1000)}};
   // WifiHelper::sendPostRequest(SERVER_HOST, "/d", 80 , n);
 

@@ -2,9 +2,6 @@
 #include <TFT_eSPI.h>
 #include <XPT2046_Bitbang.h>
 
-
-
-
 #define TFT_HOR_RES   320
 #define TFT_VER_RES  240
 
@@ -34,7 +31,7 @@ void my_disp_flush( lv_disp_drv_t *disp_drv, const lv_area_t *area, lv_color_t *
 
     tft.startWrite();
     tft.setAddrWindow( area->x1, area->y1, w, h );
-    tft.pushColors( ( uint16_t * )&color_p->full, w * h, true );
+    tft.pushColors( ( uint16_t * )&color_p->ch, w * h, true );
     tft.endWrite();
 
     lv_disp_flush_ready( disp_drv );
@@ -73,6 +70,7 @@ void my_disp_flush( lv_disp_drv_t *disp_drv, const lv_area_t *area, lv_color_t *
     data->state = LV_INDEV_STATE_RELEASED;
   }
 }
+
 
 void setupDisplay(){
       lv_init();

@@ -1,5 +1,5 @@
 #include <lvgl.h>
-#include "wifiSettingsView.h"
+// #include "wifiSettingsView.h"
 static lv_obj_t * list1;
 void createSettingView(lv_obj_t *parent);
 
@@ -11,7 +11,7 @@ void createSettingView(lv_obj_t *parent);
 static void event_handler(lv_event_t * e)
 {
     lv_event_code_t code = lv_event_get_code(e);
-    lv_obj_t * obj = lv_event_get_target_obj(e);
+    lv_obj_t * obj = lv_event_get_target(e);
     if(code == LV_EVENT_CLICKED) {
         LV_UNUSED(obj);
         LV_LOG_USER("Clicked: %s", lv_list_get_button_text(list1, obj));
@@ -23,7 +23,7 @@ static void event_handler(lv_event_t * e)
           LV_LOG_USER("goto Click_orp_calibration:");
            else if((char*) obj->user_data == Click_wifi_setting){
             LV_LOG_USER("goto Click_wifi_setting:");
-            createWifiSettingView(list1->parent);
+            //createWifiSettingView(list1->parent);
            }
         
     }
@@ -51,19 +51,19 @@ void createSettingView(lv_obj_t *parent)
     uint32_t type = 1;
     lv_obj_t * btn;
     lv_list_add_text(list1, "Sondes");
-    btn = lv_list_add_button(list1, LV_SYMBOL_SETTINGS, "Calibration PH");
+    btn = lv_list_add_btn(list1, LV_SYMBOL_SETTINGS, "Calibration PH");
     lv_obj_set_user_data(btn, &Click_ph_calibration);
     lv_obj_add_event_cb(btn, event_handler, LV_EVENT_CLICKED,NULL);
    
     
-    btn = lv_list_add_button(list1, LV_SYMBOL_SETTINGS, "Calibration Chlore");
+    btn = lv_list_add_btn(list1, LV_SYMBOL_SETTINGS, "Calibration Chlore");
     lv_obj_set_user_data(btn, &Click_orp_calibration);
     lv_obj_add_event_cb(btn, event_handler, LV_EVENT_CLICKED,  NULL);
      
    
 
     lv_list_add_text(list1, "Connection");
-    btn = lv_list_add_button(list1, LV_SYMBOL_WIFI, "Wifi");
+    btn = lv_list_add_btn(list1, LV_SYMBOL_WIFI, "Wifi");
     lv_obj_set_user_data(btn, &Click_wifi_setting);
     lv_obj_add_event_cb(btn, event_handler, LV_EVENT_CLICKED, NULL);
     
