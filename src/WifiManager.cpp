@@ -1,7 +1,10 @@
 #include "WifiManager.h"
-// #include "WiFi.h"
+#include "helper/Constants.h"
+#include "events/EventsManager.h"
+
 
 void connectWifi(String ssid, String  password){
+  WiFi.setHostname(HOST_NAME);
    WiFi.disconnect();
    WiFi.mode(WIFI_STA);
   delay(10);
@@ -12,67 +15,78 @@ void connectWifi(String ssid, String  password){
   Serial.print(ssid); Serial.println(" ...");
 
   int i = 0;
-  int delayMax = 30;
+  int delayMax = 5;
   while (WiFi.status() != WL_CONNECTED && i < delayMax ) { // Wait for the Wi-Fi to connect
     delay(1000);
     Serial.print(++i); Serial.print(' ');
+      // 
   }
   if( i >= delayMax){
      Serial.println("Connection Error :(");  
+          EventsManager::shared().callEvent(EVENT_CONNECTWIFI_ERROR);
      return;
   }
+
 
   Serial.println('\n');
   Serial.println("Connection established!");  
   Serial.print("IP address:\t");
-  Serial.println(WiFi.localIP());   
+  Serial.println(WiFi.localIP());  
+    Serial.print("gatewayIP address:\t");
+    Serial.println(WiFi.gatewayIP());   
+     Serial.print("subnetMask address:\t");
+    Serial.println(WiFi.subnetMask());   
+   EventsManager::shared().callEvent(EVENT_CONNECTWIFI_OK);
 
 };
 
 
-// void scanForWifi(char* wifiList[MaxWifiScan]){
-//    String ssid;
-//   int32_t rssi;
-//   uint8_t encryptionType;
-//   uint8_t* bssid;
-//   int32_t channel;
-//     // bool hidden;
-//   int scanResult;
+void scanForWifi(String wifiList[MaxWifiScan]){
+   String ssid;
+  int32_t rssi;
+  uint8_t encryptionType;
+  uint8_t* bssid;
+  int32_t channel;
+    // bool hidden;
+  int scanResult;
 
 
 
-//   Serial.println(F("Starting WiFi scan..."));
+  Serial.println(F("Starting WiFi scan..."));
+   WiFi.disconnect();
+   WiFi.mode(WIFI_STA);
 
-//   scanResult = WiFi.scanNetworks(/*async=*/false, /*hidden=*/true);
+  scanResult = WiFi.scanNetworks(/*async=*/false, /*hidden=*/true);
+  
 
-//   if (scanResult == 0) {
-//     Serial.println(F("No networks found"));
-//   } else if (scanResult > 0) {
-//     Serial.printf(PSTR("%d networks found:\n"), scanResult);
+  if (scanResult == 0) {
+    Serial.println(F("No networks found"));
+  } else if (scanResult > 0) {
+    Serial.printf(PSTR("%d networks found:\n"), scanResult);
 
-//     // Print unsorted scan results
-//     for (int8_t i = 0; i < scanResult; i++) {
+    // Print unsorted scan results
+    for (int8_t i = 0; i < scanResult; i++) {
      
-//       WiFi.getNetworkInfo(i, ssid, encryptionType, rssi, bssid, channel);
+      WiFi.getNetworkInfo(i, ssid, encryptionType, rssi, bssid, channel);
      
-//     Serial.println(ssid.c_str());
-//     wifiList[i] = "dsds";
-//       // Serial.printf(PSTR("  %02d: [CH %02d] [%02X:%02X:%02X:%02X:%02X:%02X] %ddBm %c %c %s\n"),
-//       //               i,
-//       //               channel,
-//       //               bssid[0], bssid[1], bssid[2],
-//       //               bssid[3], bssid[4], bssid[5],
-//       //               rssi,
-//       //               (encryptionType == ENC_TYPE_NONE) ? ' ' : '*',
-//       //               hidden ? 'H' : 'V',
-//       //               ssid.c_str());
-//       delay(0);
-//     }
-//   } else {
-//     Serial.printf(PSTR("WiFi scan error %d"), scanResult);
-//   }
+    Serial.println(ssid.c_str());
+    wifiList[i] = ssid.c_str();
+      // Serial.printf(PSTR("  %02d: [CH %02d] [%02X:%02X:%02X:%02X:%02X:%02X] %ddBm %c %c %s\n"),
+      //               i,
+      //               channel,
+      //               bssid[0], bssid[1], bssid[2],
+      //               bssid[3], bssid[4], bssid[5],
+      //               rssi,
+      //               (encryptionType == ENC_TYPE_NONE) ? ' ' : '*',
+      //               hidden ? 'H' : 'V',
+      //               ssid.c_str());
+      delay(0);
+    }
+  } else {
+    Serial.printf(PSTR("WiFi scan error %d"), scanResult);
+  }
 
-// }
+}
 
 
 

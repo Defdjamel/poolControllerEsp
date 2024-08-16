@@ -17,8 +17,7 @@ float Probe::readVoltage(){
     }
 
     float voltage = 5 / adc_resolutions * measurings/sampless;
-    Serial.print("voltage= ");
-    Serial.println(voltage);
+    
     return voltage;
     
 }

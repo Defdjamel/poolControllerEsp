@@ -112,7 +112,7 @@ void my_timer(lv_timer_t * timerlv)
 {
   /*Use the user_data*/
   uint32_t *user_data = (uint32_t*)timerlv->user_data;
-  printf("my_timer called with user data: %d\n", timerlv->last_run);
+//   printf("my_timer called with user data: %d\n", timerlv->last_run);
   lv_label_set_text_fmt(labelPH,"%.1f", timerlv->last_run/1000);
   lv_label_set_text_fmt(labelORP,"%d", timerlv->last_run/100);
 // lv_subject_init_int(&orpvalue, user_data);

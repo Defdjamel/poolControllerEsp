@@ -1,7 +1,11 @@
+#include "events/EventsManager.h"
+#include "WifiManager.h"
+
+#include <Preferences.h>
 #include "settings/Pin_settings.h"
 #include "settings/Display_settings.h"
+Preferences preferences;
 #include "views/MainView.h"
-
 
 #if LV_USE_TFT_ESPI
 #include <TFT_eSPI.h>
@@ -10,11 +14,13 @@
 #ifndef USE_PROBE_H
 #include "model/Probe.h"
 #endif 
-#include "WifiManager.h"
+
+
 
 void my_log_cb(lv_log_level_t level, const char * buf);
 void pumpActive(int second, int8_t pump);
 void testTFT();
+
 
 unsigned long timer = millis();
 
@@ -23,19 +29,17 @@ Probe phProbe = Probe(PH_PIN, PROBE_PH);
 
 void setup(void)
 {  
-  delay(10);
+  delay(0);
   Serial.begin(115200);
   // Serial.setDebugOutput(true);
   // while(!Serial);
   Serial.println("Pool Controller V1.0");
   setupDisplay();
   setupTouchScreen();
-
-    // Set WiFi to station mode
+  preferences.begin(APP_NSP, false); 
  
   // Disconnect from an AP if it was previously connected
   //WiFi.disconnect();
-  delay(2000);
   // pumpActive(2 , PH_PUMP);
   //delay(2000);
   // pumpActive(2 , ORP_PUMP);
@@ -50,6 +54,7 @@ createMainView();
 
 
   // testTFT();
+  
   
 }
 void testTFT(){
@@ -75,7 +80,7 @@ void loop()
  if(millis() > timer + 2000){
     float phVoltage = phProbe.readVoltage();
     char buffer[6];
-    sprintf(buffer, "%.2f", phVoltage);
+    // sprintf(buffer, "%.2f", phVoltage);
     timer = millis();
  } 
   
