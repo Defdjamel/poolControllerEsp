@@ -21,6 +21,7 @@
         "vector": "cpp",
         "string_view": "cpp",
         "initializer_list": "cpp",
-        "sstream": "cpp"
+        "sstream": "cpp",
+        "custom_font.c": "cpp"
     }
 }

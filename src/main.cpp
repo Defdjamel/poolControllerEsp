@@ -1,11 +1,21 @@
 #include "events/EventsManager.h"
 #include "WifiManager.h"
+#include "helper/custom_font.c"
+#include "helper/font.h"
 
 #include <Preferences.h>
 #include "settings/Pin_settings.h"
 #include "settings/Display_settings.h"
 Preferences preferences;
 #include "views/MainView.h"
+
+
+
+/*Use the font*/
+
+/*Free the font if not required anymore*/
+// lv_font_free(my_font);
+
 
 #if LV_USE_TFT_ESPI
 #include <TFT_eSPI.h>
@@ -46,8 +56,7 @@ void setup(void)
 
  //phProbe.startCalibrationPH(gfx);
 //  connectWifi("WIFI_ssid" , "WIFI_password");
-  
-  // We can now plot text on screen using the "print" class
+
 
 createMainView();
  //int scanResult = WiFi.scanNetworks(/*async=*/false, /*hidden=*/true);
