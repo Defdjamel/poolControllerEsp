@@ -113,7 +113,6 @@ void createSettingView(lv_obj_t *parent)
     
 
     /*Add buttons to the list*/
-    uint32_t type = 1;
     lv_obj_t * btn;
     lv_list_add_text(list1, "Sondes");
     btn = lv_list_add_btn(list1, LV_SYMBOL_SETTINGS, "Calibration PH");
@@ -125,22 +124,20 @@ void createSettingView(lv_obj_t *parent)
     lv_obj_set_user_data(btn, &Click_orp_calibration);
     lv_obj_add_event_cb(btn, event_handler, LV_EVENT_CLICKED,  NULL);
      
-   
-
     lv_list_add_text(list1, "Connection");
     // btn = lv_list_add_btn(list1, LV_SYMBOL_WIFI, "Wifi");
     // lv_obj_set_user_data(btn, &Click_wifi_setting);
     
 
-       btn = lv_btn_create(list1);
-        lv_obj_set_width(btn, lv_pct(100));
-        lv_obj_set_user_data(btn, &Click_wifi_setting);
-           lv_obj_add_event_cb(btn, event_handler, LV_EVENT_CLICKED, NULL);
-      
+    btn = lv_btn_create(list1);
+    lv_obj_set_width(btn, lv_pct(100));
+    lv_obj_set_user_data(btn, &Click_wifi_setting);
+    lv_obj_add_event_cb(btn, event_handler, LV_EVENT_CLICKED, NULL);
 
-       labSettingBtn = lv_label_create(btn);
-         EventsManager::shared().addHandler(eventManager_handler);
-         tryConnectWifi();
+
+    labSettingBtn = lv_label_create(btn);
+    EventsManager::shared().addHandler(eventManager_handler);
+    
 
   
 }

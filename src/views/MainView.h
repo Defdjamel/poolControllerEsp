@@ -1,6 +1,7 @@
 #include <lvgl.h>
 #include "HomeView.h"
- #include "SettingsView.h"
+#include "SettingsView.h"
+#include "InfoView.h"
 
 
   lv_obj_t * tabview;
@@ -60,6 +61,7 @@ lv_obj_add_style(tab3,  &style, LV_PART_MAIN| LV_STATE_DEFAULT);
 
      createHomeView(tab1);
      createSettingView(tab2);
+     createInfoView(tab3);
 
     lv_obj_scroll_to_view_recursive(tab3, LV_ANIM_OFF);
 }

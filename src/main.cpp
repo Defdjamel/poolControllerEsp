@@ -59,6 +59,7 @@ void setup(void)
 
 
 createMainView();
+tryConnectWifi();
  //int scanResult = WiFi.scanNetworks(/*async=*/false, /*hidden=*/true);
 
 
