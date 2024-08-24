@@ -1,5 +1,6 @@
 #include <lvgl.h>
-#include "wifiSettingsView.h"
+#include "setting/wifiSettingsView.h"
+#include "setting/phCalibrationView.h"
 
 
 static lv_obj_t * list1;
@@ -81,8 +82,11 @@ static void event_handler(lv_event_t * e)
         LV_LOG_USER("Clicked: %s", lv_list_get_btn_text(list1, obj));
          LV_LOG_USER( "userdata : %s",(char*) obj->user_data);
          //Serial.println((int*) obj->user_data);
-         if((char*) obj->user_data == Click_ph_calibration)
-          LV_LOG_USER("goto ph calibration");
+         if((char*) obj->user_data == Click_ph_calibration){
+            LV_LOG_USER("goto ph calibration");
+            createCalibrationPHView();
+         }
+        
            else if((char*) obj->user_data == Click_orp_calibration)
           LV_LOG_USER("goto Click_orp_calibration:");
            else if((char*) obj->user_data == Click_wifi_setting){

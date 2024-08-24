@@ -63,7 +63,7 @@ lv_obj_add_style(tab3,  &style, LV_PART_MAIN| LV_STATE_DEFAULT);
      createSettingView(tab2);
      createInfoView(tab3);
 
-    lv_obj_scroll_to_view_recursive(tab3, LV_ANIM_OFF);
+    lv_obj_scroll_to_view_recursive(tab2, LV_ANIM_OFF);
 }
 
 void displayWifiConnected(bool _isConnected){

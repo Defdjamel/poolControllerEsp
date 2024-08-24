@@ -12,14 +12,11 @@ static void eventManager_info(byte event){
     }
     else if(event == EVENT_CONNECTWIFI_ERROR ){
         updateListInfo();
-
     }
-
 }
 
 void createInfoView(lv_obj_t *parent)
 {
-
    /*Create a list*/
     listInfo = lv_list_create(parent);
     lv_obj_set_size(listInfo, lv_pct(100),  lv_pct(100));
@@ -41,9 +38,7 @@ void createInfoView(lv_obj_t *parent)
    lv_obj_t *  label = lv_label_create(parent);
      lv_label_set_text(label,"Pool Controller by James ");
       lv_obj_set_style_text_font(label, &lv_font_montserrat_12,LV_PART_MAIN| LV_STATE_DEFAULT);
-    //  lv_obj_set_align(label,LV_ALIGN_BOTTOM_LEFT);
      lv_obj_align(label, LV_ALIGN_BOTTOM_RIGHT, -5, -5);
-  
 }
 
 void updateListInfo(){
@@ -60,13 +55,7 @@ void updateListInfo(){
         lv_label_set_text_fmt(label,LV_SYMBOL_WIFI " Wifi :  %s ",WiFi.SSID());
         label = lv_label_create(listInfo);
         lv_label_set_text_fmt(label,"ip adress :  %s ",WiFi.localIP().toString());
-
-
     }
      label = lv_label_create(listInfo);
      lv_label_set_text_fmt(label,"mac :  %s ",WiFi.macAddress().c_str());
-
-     
-
-
 }
