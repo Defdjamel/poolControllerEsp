@@ -2,11 +2,14 @@
 #include "WifiManager.h"
 #include "helper/custom_font.c"
 #include "helper/font.h"
+#include "model/Probe.h"
+#include "helper/Constants.h"
 
 #include <Preferences.h>
+Preferences preferences;
 #include "settings/Pin_settings.h"
 #include "settings/Display_settings.h"
-Preferences preferences;
+
 #include "views/MainView.h"
 
 

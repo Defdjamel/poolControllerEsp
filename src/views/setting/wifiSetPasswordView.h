@@ -1,5 +1,5 @@
 #include <lvgl.h>
-
+#include <WifiManager.h>
 #include "helper/Config.h"
 
 static void event_handler_wifi(lv_event_t * e);
@@ -12,6 +12,7 @@ String  SSID ;
 String  SSID_PWD;
 
 void setPassword(){
+ 
 
     LV_LOG_USER("SAVE WIFI: %s %s" , SSID.c_str(), SSID_PWD.c_str());
    preferences.putString(SSID_KEY,SSID);
@@ -19,6 +20,8 @@ void setPassword(){
 
   EventsManager::shared().callEvent(EVENT_UPDATEWIFICONFIG);
 
+
+  //connect
 
   //go to home
   lv_obj_del(wifiSetPasswordView);

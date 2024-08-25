@@ -1,13 +1,15 @@
+
+#ifndef USE_CONFIG_H
+#define USE_CONFIG_H
 #include <Preferences.h>
 #include <EEPROM.h>
 #include <Arduino.h>
-#ifndef USE_CONFIG_H
-#define USE_CONFIG_H
-#endif
+
 
 #define EEPROM_SIZE 12
 #define APP_NSP "NSP"
-#define PH_KEY "Ph_KEY"
+#define PH_KEY_A "PH_KEY_A"
+#define PH_KEY_B "PH_KEY_B"
 #define SSID_KEY "SSID_KEY"
 #define PWD_KEY "PWD_KEY"
 
@@ -25,6 +27,7 @@ class Config{
        
         void saveConfig();
     private:
-        Preferences preferences;  
+         Preferences preferences = Preferences();
 };
 
+#endif

@@ -2,26 +2,15 @@
 #include <nvs_flash.h>
 
 Config::Config(){
+   preferences.begin(APP_NSP, false); 
 
-//Preferences preferences;  
-
-
-// EEPROM.begin(EEPROM_SIZE);
-//   int address = 0;
-// EEPROM.get(address, ph_a);
-// address += sizeof(ph_a);
-// EEPROM.get(address, ph_b);
-// address += sizeof(ph_b);
-// EEPROM.get(address, orp_offset);
+ph_a =  preferences.getFloat(PH_KEY_A, ph_a);
+ph_b =  preferences.getFloat(PH_KEY_B, ph_b);
 }
 void Config::saveConfig(){
-    int address = 0;
-    EEPROM.put(address, ph_a);
-    address += sizeof(ph_a);
-    EEPROM.put(address, ph_b);
-    address += sizeof(ph_b);
-    EEPROM.put(address, orp_offset);
-    EEPROM.commit();
+
+  preferences.putFloat(PH_KEY_A, ph_a);
+  preferences.putFloat(PH_KEY_B, ph_b);
 
 
 }

@@ -1,12 +1,10 @@
 // PH4502C
 #ifndef USE_PROBE_H
 #define USE_PROBE_H
-#endif
 
-
-#ifndef USE_CONFIG_H
 #include "helper/Config.h"
-#endif
+
+
 
 
 #include "Arduino.h"
@@ -20,7 +18,7 @@ public:
 
 Probe(uint8_t analogpin,byte type = PROBE_PH);
 float readVoltage();
-float readPH();
+float readPH(Preferences *pref);
 void startCalibrationPH();
 bool checkCalibrationOK( float voltage1, float voltage2);
 
@@ -34,3 +32,4 @@ private:
 
 
 };
+#endif

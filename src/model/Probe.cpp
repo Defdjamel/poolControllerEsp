@@ -17,15 +17,17 @@ float Probe::readVoltage(){
     }
 
     float voltage = 5 / adc_resolutions * measurings/sampless;
-    
+     Serial.printf("voltage= %.2f \n\r",voltage);
     return voltage;
     
 }
-float Probe::readPH(){
+float Probe::readPH(Preferences *pref){
+ float   ph_a =  pref->getFloat(PH_KEY_A, ph_a);
+float ph_b =  pref->getFloat(PH_KEY_B, ph_b);
    
-    Serial.printf("ph_a= %f , ph_b= %f \n\r",configProbe.ph_a,configProbe.ph_b);
+    Serial.printf("ph_a= %f , ph_b= %f \n\r",ph_a,ph_b);
     float voltage = readVoltage();
-    float ph = voltage * configProbe.ph_a + configProbe.ph_b;
+    float ph = voltage * ph_a + ph_b;
     Serial.printf("PH= %f \n\r",ph);
     return ph;
 }
@@ -66,11 +68,7 @@ void Probe::startCalibrationPH(){
         // Serial.printf("A= %f \r\n",a);
         // Serial.printf("B= %f \r\n",b);
      
-        Config config =  Config();
-        config.ph_a = a;
-        config.ph_b = b;
-        config.saveConfig();
-        configProbe = config;
+       
         delay(10*1000);
     }
     else{
