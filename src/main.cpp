@@ -98,8 +98,8 @@ void loop()
  } 
   
   
-  // String n[2][2] = {{"A","Hello"},{"size",String(millis()/1000)}};
-  // WifiHelper::sendPostRequest(SERVER_HOST, "/d", 80 , n);
+  //  String n[2][2] = {{"A","Hello"},{"size",String(millis()/1000)}};
+// sendPostRequest(SERVER_HOST, "/d", 80 , n);
 
 }
 void readOrp(){

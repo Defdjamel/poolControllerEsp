@@ -18,8 +18,8 @@ const db = getFirestore();
 
 exports.updatePh = onRequest(async (request, response) => {
   logger.info("Hello logs! updatePh", {structuredData: true});
-  const deviceId = req.body.mac;
-  const phVal = req.body.ph;
+  const deviceId = request.body.mac;
+  const phVal = parseFloat(request.body.ph);
   const devicesREf = db.collection("prod/data/devices/" + deviceId + "/ph");
 
   // // Add a new document with a generated id.

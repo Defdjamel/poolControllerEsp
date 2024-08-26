@@ -2,6 +2,7 @@
 
 Probe phProbe2 = Probe(PH_PIN, PROBE_PH);
 void createHomeView(lv_obj_t *parent);
+void sendPhToServer();
 lv_obj_t * createBlockPh(lv_obj_t *parent);
 lv_obj_t * createBlockOrp(lv_obj_t *parent);
 void my_timer(lv_timer_t * timer);
@@ -53,7 +54,7 @@ static lv_coord_t row_dsc[] = {100,100, LV_GRID_TEMPLATE_LAST};
     
 
    }
-lv_timer_t * timerlv = lv_timer_create(my_timer, 500,  &user_data);
+lv_timer_t * timerlv = lv_timer_create(my_timer, 2000,  &user_data);
 
 
 }
@@ -119,8 +120,11 @@ void my_timer(lv_timer_t * timerlv)
 //   printf("my_timer called with user data: %d\n", timerlv->last_run);
   lv_label_set_text_fmt(labelPH,"%.1f", PhVal);
   lv_label_set_text_fmt(labelORP,"%d", timerlv->last_run/100);
-// lv_subject_init_int(&orpvalue, user_data);
-// lv_subject_set_int(&phvalue,timerlv->last_run/1000 );
-// lv_subject_set_int(&orpvalue, timerlv->last_run);
+  sendPhToServer();
 
+}
+
+void sendPhToServer(){
+String n[2][2] = {{"mac","Hello"},{"ph","12.3"}};
+  sendPostRequest(SERVER_API_PH,"",SERVER_PORT, n,2)  ;
 }

@@ -10,8 +10,9 @@
 // #include <ESP8266HTTPClient.h>
 #define MaxWifiScan 10
   void scanForWifi(String wifiList[MaxWifiScan]);
- void connectWifi(String ssid, String password);
-// String sendPostRequest(char* host,char* url, int port, String params);
+  void connectWifi(String ssid, String password);
+  String sendPostRequest(char* host,char* url, int port, String params[][2],int paramsNbr); 
+  String stringParams(String params[][2] , int c);
 
 // class WifiHelper{
 //     public:

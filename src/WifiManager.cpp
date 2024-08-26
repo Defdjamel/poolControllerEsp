@@ -1,6 +1,7 @@
 #include "WifiManager.h"
 #include "helper/Constants.h"
 #include "events/EventsManager.h"
+#include <HTTPClient.h>
 
 
 void connectWifi(String ssid, String  password){
@@ -32,10 +33,10 @@ void connectWifi(String ssid, String  password){
   Serial.println("Connection established!");  
   Serial.print("IP address:\t");
   Serial.println(WiFi.localIP());  
-    Serial.print("gatewayIP address:\t");
-    Serial.println(WiFi.gatewayIP());   
-     Serial.print("subnetMask address:\t");
-    Serial.println(WiFi.subnetMask());   
+  Serial.print("gatewayIP address:\t");
+  Serial.println(WiFi.gatewayIP());   
+  Serial.print("subnetMask address:\t");
+  Serial.println(WiFi.subnetMask());   
    EventsManager::shared().callEvent(EVENT_CONNECTWIFI_OK);
 
 };
@@ -86,67 +87,70 @@ void scanForWifi(String wifiList[MaxWifiScan]){
     Serial.printf(PSTR("WiFi scan error %d"), scanResult);
   }
 
-}
+};
 
 
 
-// String WifiHelper::sendPostRequest(char* host,char* url, int port, String params[][2]){
-//    if ((WiFi.status() != WL_CONNECTED)) return "";
-//     WiFiClient client;
-//     //WiFiClientSecure client;
-//     //client.setInsecure();
-//     // client.setFingerprint(fingerprint);
-//   HTTPClient http; 
- 
-//     if (!client.connect(host, port)) {
-//       Serial.println("connection failed");
-//        delay(5000);
-//       return "";
-//     }
+String sendPostRequest(char* host,char* url, int port, String params[][2],int paramsNbr = 0){
+   if ((WiFi.status() != WL_CONNECTED)) return "";
+    // WiFiClient client;
+    WiFiClientSecure client;
+  
+    client.setInsecure();
+    // client.setFingerprint(fingerprint);
+    // client.setCACert(rootCACertificate);
+  HTTPClient http; 
+   String webUrl =  "https://" + String(host)  ;
+    if (!client.connect(host, 443)) {
+      Serial.println("connection failed");
+       delay(5000);
+      return "";
+    }
 
-//     String webUrl =  "http://" + String(host)  ;
+  
 
+      Serial.println(webUrl);
+
+     String msg = "{\"hello\":\"insecure\"}";
+    http.begin(client,webUrl );
+    http.addHeader("Content-Type", "application/json"); // e.g.
+    http.setUserAgent( HOST_NAME); // e.g.
+     int httpCode = http.POST(stringParams(params,paramsNbr)); // e.g. a=4&b=6&c=something
+      // int httpCode = http.POST(msg);
     
-
-//     String msg = "{\"hello\":\"insecure\"}";
-//     http.begin(client,webUrl );
-//     http.addHeader("Content-Type", "application/json"); // e.g.
-//     http.setUserAgent( "ESP_POOL_CONTROLLER"); // e.g.
-//     int httpCode = http.POST(WifiHelper::stringParams(params,2)); // e.g. a=4&b=6&c=something
+      if (httpCode > 0) {
+          // HTTP header has been send and Server response header has been handled
+          Serial.printf("[HTTP] POST... code: %d\n", httpCode);
     
-//       if (httpCode > 0) {
-//           // HTTP header has been send and Server response header has been handled
-//           Serial.printf("[HTTP] POST... code: %d\n", httpCode);
-    
-//           // file found at server
-//           if (httpCode == HTTP_CODE_OK) {
-//              String payload = http.getString();
-//               http.end();
-//              return payload;
-//           }
-//         } else {
-//           String s  =  http.errorToString(httpCode).c_str();
+          // file found at server
+          if (httpCode == HTTP_CODE_OK) {
+             String payload = http.getString();
+              http.end();
+             return payload;
+          }
+        } else {
+          String s  =  http.errorToString(httpCode).c_str();
           
-//           delay(5000);
-//         }
+          delay(5000);
+        }
     
-//     http.end();
+    http.end();
     
-//     return "";
+    return "";
        
     
-// }
-// String WifiHelper::stringParams(String params[][2] , int c){
-//    String msg = "";
+}
+String stringParams(String params[][2] , int c){
+   String msg = "";
   
-// for (int i = 0; i < c ;  i++ ){
+for (int i = 0; i < c ;  i++ ){
 
-//   String key = params[i][0];
-//   String val = params[i][1];
-//   msg = msg + "\"" + key + "\":" + "\"" + val + "\"";
-//   if(i+1<c) msg+= ",";
+  String key = params[i][0];
+  String val = params[i][1];
+  msg = msg + "\"" + key + "\":" + "\"" + val + "\"";
+  if(i+1<c) msg+= ",";
   
-// }
+}
   
-//   return "{" + msg + "}";
-// }
+  return "{" + msg + "}";
+}
