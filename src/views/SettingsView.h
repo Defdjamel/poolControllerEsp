@@ -45,6 +45,8 @@ String ssid = preferences.getString(SSID_KEY, "");
 
  if (passwords.length() > 0 && ssid.length() > 0){
     connectWifi(ssid,passwords);
+ }else{
+     LV_LOG_USER("NO WIFI setted");
  }
 
 }
@@ -53,16 +55,16 @@ void updateLabelSetting(){
 
 String passwords = preferences.getString(PWD_KEY, "");
 String ssid = preferences.getString(SSID_KEY, "");
- LV_LOG_USER("WIFI %s %s",ssid.c_str(),passwords.c_str());
+ LV_LOG_USER("updateLabelSetting %s %s",ssid.c_str(),passwords.c_str());
 
- lv_label_set_text_fmt(labSettingBtn, LV_SYMBOL_WIFI " Wifi %s " LV_SYMBOL_OK,ssid.c_str());
+ lv_label_set_text_fmt(labSettingBtn," Wifi %s " LV_SYMBOL_OK,ssid.c_str());
  
 
 }
 
 void updateLabelSettingError(){
     String ssid = preferences.getString(SSID_KEY, "");
-    lv_label_set_text_fmt(labSettingBtn, LV_SYMBOL_WIFI " Wifi %s " LV_SYMBOL_WARNING, ssid.c_str());
+    lv_label_set_text_fmt(labSettingBtn," Wifi %s " LV_SYMBOL_WARNING, ssid.c_str());
 }
 
  
@@ -133,13 +135,14 @@ void createSettingView(lv_obj_t *parent)
     // lv_obj_set_user_data(btn, &Click_wifi_setting);
     
 
-    btn = lv_btn_create(list1);
+    btn = lv_list_add_btn(list1, LV_SYMBOL_WIFI, "");
     lv_obj_set_width(btn, lv_pct(100));
     lv_obj_set_user_data(btn, &Click_wifi_setting);
     lv_obj_add_event_cb(btn, event_handler, LV_EVENT_CLICKED, NULL);
 
 
     labSettingBtn = lv_label_create(btn);
+    lv_label_set_text(labSettingBtn,"No connected");
     EventsManager::shared().addHandler(eventManager_handler);
     
 

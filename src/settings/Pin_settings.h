@@ -10,4 +10,4 @@
 #define ORP_PUMP  18
 
 //Probe
-#define PH_PIN  34
+#define PH_PIN  36

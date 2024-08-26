@@ -1,12 +1,14 @@
 #include <lvgl.h>
 
-
+Probe phProbe2 = Probe(PH_PIN, PROBE_PH);
 void createHomeView(lv_obj_t *parent);
 lv_obj_t * createBlockPh(lv_obj_t *parent);
 lv_obj_t * createBlockOrp(lv_obj_t *parent);
 void my_timer(lv_timer_t * timer);
  lv_obj_t * labelPH;
   lv_obj_t * labelORP;
+  float PhVal = 0;
+
 //  static lv_subject_t  phvalue;
 //  static lv_subject_t orpvalue;
 
@@ -110,10 +112,12 @@ lv_obj_t * createBlockOrp(lv_obj_t *parent){
 
 void my_timer(lv_timer_t * timerlv)
 {
+
+ PhVal =  phProbe2.readPH(&preferences);
   /*Use the user_data*/
   uint32_t *user_data = (uint32_t*)timerlv->user_data;
 //   printf("my_timer called with user data: %d\n", timerlv->last_run);
-  lv_label_set_text_fmt(labelPH,"%.1f", timerlv->last_run/1000);
+  lv_label_set_text_fmt(labelPH,"%.1f", PhVal);
   lv_label_set_text_fmt(labelORP,"%d", timerlv->last_run/100);
 // lv_subject_init_int(&orpvalue, user_data);
 // lv_subject_set_int(&phvalue,timerlv->last_run/1000 );

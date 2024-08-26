@@ -27,8 +27,8 @@ private:
     int _pin ;
     byte _type ;
     int sampless = 10;
-    float adc_resolutions = 4095.0;
-    Config configProbe ;    
+     float adc_resolutions = 4095.0;
+     
 
 
 };

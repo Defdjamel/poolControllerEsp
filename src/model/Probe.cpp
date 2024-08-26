@@ -4,7 +4,6 @@
 Probe::Probe(uint8_t analogpin,byte type ){
 _pin  = analogpin;
 pinMode(_pin,INPUT);
-configProbe =  Config();
 }
 
 
@@ -22,9 +21,9 @@ float Probe::readVoltage(){
     
 }
 float Probe::readPH(Preferences *pref){
- float   ph_a =  pref->getFloat(PH_KEY_A, ph_a);
-float ph_b =  pref->getFloat(PH_KEY_B, ph_b);
-   
+    float ph_a =  pref->getFloat(PH_KEY_A, ph_a);
+    float ph_b =  pref->getFloat(PH_KEY_B, ph_b);
+
     Serial.printf("ph_a= %f , ph_b= %f \n\r",ph_a,ph_b);
     float voltage = readVoltage();
     float ph = voltage * ph_a + ph_b;
