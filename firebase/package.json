@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "firebase-functions": "^4.8.2",
+    "firebase-functions-test": "^3.1.0",
+    "package-name": "^0.1.0"
+  }
+}

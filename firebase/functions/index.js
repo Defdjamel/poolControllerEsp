@@ -1,18 +1,15 @@
-/**
- * Import function triggers from their respective submodules:
- *
- * const {onCall} = require("firebase-functions/v2/https");
- * const {onDocumentWritten} = require("firebase-functions/v2/firestore");
- *
- * See a full list of supported triggers at https://firebase.google.com/docs/functions
- */
 
 const {onRequest} = require("firebase-functions/v2/https");
 const logger = require("firebase-functions/logger");
 const functions = require("firebase-functions/v1");
 const {initializeApp} = require("firebase-admin/app");
+const admin = require("firebase-admin");
 const {getFirestore, FieldValue} = require("firebase-admin/firestore");
-initializeApp();
+
+// const serviceAccount = require("../poolcontroller_key_local.json");
+initializeApp({
+//   credential: admin.credential.cert(serviceAccount),
+});
 
 const db = getFirestore();
 
@@ -20,14 +17,13 @@ const db = getFirestore();
 // https://firebase.google.com/docs/functions/get-started
 
 exports.updatePh = onRequest(async (request, response) => {
-  logger.info("Hello logs! helloWorld2", {structuredData: true});
-  const deviceId = "MAC_ADRESS";
-  const phVal = 12.6;
+  logger.info("Hello logs! updatePh", {structuredData: true});
+  const deviceId = req.body.mac;
+  const phVal = req.body.ph;
   const devicesREf = db.collection("prod/data/devices/" + deviceId + "/ph");
 
-  // Add a new document with a generated id.
+  // // Add a new document with a generated id.
   const res = await devicesREf.add({
-    name: "PH",
     value: phVal,
     created_at: FieldValue.serverTimestamp(),
   });
@@ -43,7 +39,8 @@ exports.helloWorldGet = onRequest((request, response) => {
 
 exports.sayHello = onRequest(
     (req, res) => {
-      res.status(200).send(req.query);
+        
+      res.status(200).send(req.body.mac);
     },
 );
 // test V1
