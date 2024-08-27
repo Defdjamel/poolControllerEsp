@@ -1,13 +1,10 @@
- #define BLYNK_PRINT Serial
- #define BLYNK_TEMPLATE_ID "TMPL5SBIKrCyr"
-#define BLYNK_TEMPLATE_NAME "Pool Controller"
- #define BLYNK_AUTH_TOKEN "E4I5fTOZjOggStL57OhplNxTd0oHZqyV"
-#define BLYNK_FIRMWARE_VERSION        "0.2.0"
 
+//GLOBAL VAR
 float phVal = 0;
 float orpVal = 0;
-bool phAuto = 1;
+int phAuto = 0;//O: auto 1: PH FORCE 2: CHLORE FORCE
 double phDosage = 0;
+double orpDosage = 0;
 
 #include "BlynkManager.h"
 #include <BlynkSimpleEsp32.h>
@@ -27,11 +24,6 @@ Preferences preferences;
 #include "settings/Display_settings.h"
 
 #include "views/MainView.h"
-
-/*Use the font*/
-
-/*Free the font if not required anymore*/
-// lv_font_free(my_font);
 
 
 #if LV_USE_TFT_ESPI
@@ -143,6 +135,7 @@ void sendPhToServer(){
 }
 
 void sendOrpToServer(){
+   Blynk.virtualWrite(phVal, millis()/10);
 //  String n[2][2] = {{"mac",WiFi.macAddress().c_str()},{"orp",String(orpVal)}};
 // sendPostRequest(SERVER_API_ORP, "", SERVER_PORT, n, 2 )  ;
 }
