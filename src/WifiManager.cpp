@@ -91,7 +91,7 @@ void scanForWifi(String wifiList[MaxWifiScan]){
 
 
 
-String sendPostRequest(char* host,char* url, int port, String params[][2],int paramsNbr = 0){
+String sendPostRequest(const char* host,const char* url, int port, String params[][2],int paramsNbr){
    if ((WiFi.status() != WL_CONNECTED)) return "";
     // WiFiClient client;
     WiFiClientSecure client;
@@ -111,7 +111,9 @@ String sendPostRequest(char* host,char* url, int port, String params[][2],int pa
 
       Serial.println(webUrl);
 
-     String msg = "{\"hello\":\"insecure\"}";
+      //add mac address
+
+    //  String msg = "{\"hello\":\"insecure\"}";
     http.begin(client,webUrl );
     http.addHeader("Content-Type", "application/json"); // e.g.
     http.setUserAgent( HOST_NAME); // e.g.

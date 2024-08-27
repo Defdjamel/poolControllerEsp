@@ -1,3 +1,15 @@
+ #define BLYNK_PRINT Serial
+ #define BLYNK_TEMPLATE_ID "TMPL5SBIKrCyr"
+#define BLYNK_TEMPLATE_NAME "Pool Controller"
+ #define BLYNK_AUTH_TOKEN "E4I5fTOZjOggStL57OhplNxTd0oHZqyV"
+#define BLYNK_FIRMWARE_VERSION        "0.1.0"
+
+#include "BlynkManager.h"
+
+#include <BlynkSimpleEsp32.h>
+
+
+
 #include "events/EventsManager.h"
 #include "WifiManager.h"
 #include "helper/custom_font.c"
@@ -11,8 +23,6 @@ Preferences preferences;
 #include "settings/Display_settings.h"
 
 #include "views/MainView.h"
-
-
 
 /*Use the font*/
 
@@ -32,16 +42,20 @@ Preferences preferences;
 
 void my_log_cb(lv_log_level_t level, const char * buf);
 void pumpActive(int second, int8_t pump);
-void testTFT();
+void sendPhToServer();
+void sendOrpToServer();
+void send_data();
+
+void timer_update_data(lv_timer_t * timer);
 
 
-unsigned long timer = millis();
+
 
 Probe phProbe = Probe(PH_PIN, PROBE_PH);
 // Probe orpProbe = Probe(PH_PIN, ORP_PH);
 
 void setup(void)
-{  
+{     
   delay(0);
   Serial.begin(115200);
   // Serial.setDebugOutput(true);
@@ -62,50 +76,29 @@ void setup(void)
 
 
 createMainView();
+String passwords = preferences.getString(PWD_KEY, "");
+String ssid = preferences.getString(SSID_KEY, "");
+
+
 tryConnectWifi();
- //int scanResult = WiFi.scanNetworks(/*async=*/false, /*hidden=*/true);
+static uint32_t user_data = 10;
+lv_timer_t * my_timer_update_ph = lv_timer_create(timer_update_data, UPDATE_DATE_TIME,  &user_data);
+send_data();
 
-
-  // testTFT();
-  
   
 }
-void testTFT(){
-  tft.fillScreen(TFT_WHITE);
-  
-  // Set "cursor" at top left corner of display (0,0) and select font 2
-  // (cursor will move to next line automatically during printing with 'tft.println'
-  //  or stay on the line is there is room for the text with tft.print)
-  tft.setCursor(0, 0, 2);
-  // Set the font colour to be white with a black background, set text size multiplier to 1
-  tft.setTextColor(0x4c3c,TFT_BLACK);  tft.setTextSize(1);
-  // We can now plot text on screen using the "print" class
-  tft.println("Hello World!");
-}
+
 
 void loop()
-{   
+{   Blynk.run();
   lv_task_handler();  // let the GUI do its work
   lv_tick_inc(5);     // tell LVGL how much time has passed
-  delay(5);   
-
-  //read ph every 5 sec
- if(millis() > timer + 2000){
-    float phVoltage = phProbe.readVoltage();
-    char buffer[6];
-    // sprintf(buffer, "%.2f", phVoltage);
-    timer = millis();
- } 
-  
-  
-  //  String n[2][2] = {{"A","Hello"},{"size",String(millis()/1000)}};
-// sendPostRequest(SERVER_HOST, "/d", 80 , n);
+  delay(5);
 
 }
+
 void readOrp(){
- 
   //float orpVal = orpProbe.readVoltage();
-  
 }
 
 void pumpActive(int second, int8_t pump) {
@@ -118,32 +111,34 @@ void pumpActive(int second, int8_t pump) {
 }
 
 
-
-// void testWifi(){
-
-// gfx->fillScreen(BLACK);
-//  gfx->setCursor(10, 10);
-// String wifiList[3]={"","",""};
- 
-//   gfx->print("SCANNING...");delay(100);
-// scanForWifi(wifiList);
-// gfx->fillScreen(BLACK);
-//  gfx->setCursor(10, 10);
-  
-//   gfx->println("SCAN RESULT : ");
-//  for(int i = 0; i<3; i++ ){
-  
-//   gfx->setTextColor(WHITE,BLUE);
- 
-//   gfx->setFont(u8g2_font_DigitalDisco_tf);
-  
-//   gfx->println(wifiList[i]);
-
-//  }
-//  delay(4000);
-// }
 void my_log_cb(lv_log_level_t level, const char * buf)
 {
   //serial_send(buf, strlen(buf));
    Serial.println(buf);
 }
+
+
+void send_data(){
+  if(!WiFi.isConnected())return;
+sendPhToServer();
+// sendOrpToServer();
+}
+
+
+void timer_update_data(lv_timer_t * timerlv)
+{
+send_data();
+}
+
+
+void sendPhToServer(){
+String n[2][2] = {{"mac",WiFi.macAddress().c_str()},{"ph",String(phVal)}};
+  // sendPostRequest(SERVER_API_PH, "", SERVER_PORT,  n, 2 )  ;
+  Blynk.virtualWrite(V0, millis()/10);
+}
+
+void sendOrpToServer(){
+ String n[2][2] = {{"mac",WiFi.macAddress().c_str()},{"orp",String(orpVal)}};
+sendPostRequest(SERVER_API_ORP, "", SERVER_PORT, n, 2 )  ;
+}
+

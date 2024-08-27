@@ -2,13 +2,14 @@
 
 Probe phProbe2 = Probe(PH_PIN, PROBE_PH);
 void createHomeView(lv_obj_t *parent);
-void sendPhToServer();
+
 lv_obj_t * createBlockPh(lv_obj_t *parent);
 lv_obj_t * createBlockOrp(lv_obj_t *parent);
 void my_timer(lv_timer_t * timer);
  lv_obj_t * labelPH;
   lv_obj_t * labelORP;
-  float PhVal = 0;
+ float phVal = 0;
+float orpVal = 0;
 
 //  static lv_subject_t  phvalue;
 //  static lv_subject_t orpvalue;
@@ -54,7 +55,8 @@ static lv_coord_t row_dsc[] = {100,100, LV_GRID_TEMPLATE_LAST};
     
 
    }
-lv_timer_t * timerlv = lv_timer_create(my_timer, 2000,  &user_data);
+lv_timer_t * timerlv = lv_timer_create(my_timer, 1000*10,  &user_data);
+ phVal =  phProbe2.readPH(&preferences);
 
 
 }
@@ -114,17 +116,12 @@ lv_obj_t * createBlockOrp(lv_obj_t *parent){
 void my_timer(lv_timer_t * timerlv)
 {
 
- PhVal =  phProbe2.readPH(&preferences);
+ phVal =  phProbe2.readPH(&preferences);
   /*Use the user_data*/
   uint32_t *user_data = (uint32_t*)timerlv->user_data;
 //   printf("my_timer called with user data: %d\n", timerlv->last_run);
-  lv_label_set_text_fmt(labelPH,"%.1f", PhVal);
+  lv_label_set_text_fmt(labelPH,"%.1f", phVal);
   lv_label_set_text_fmt(labelORP,"%d", timerlv->last_run/100);
-  sendPhToServer();
 
 }
 
-void sendPhToServer(){
-String n[2][2] = {{"mac","Hello"},{"ph","12.3"}};
-  sendPostRequest(SERVER_API_PH,"",SERVER_PORT, n,2)  ;
-}

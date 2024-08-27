@@ -17,11 +17,9 @@ const db = getFirestore();
 // https://firebase.google.com/docs/functions/get-started
 
 exports.updatePh = onRequest(async (request, response) => {
-  logger.info("Hello logs! updatePh", {structuredData: true});
   const deviceId = request.body.mac;
   const phVal = parseFloat(request.body.ph);
   const devicesREf = db.collection("prod/data/devices/" + deviceId + "/ph");
-
   // // Add a new document with a generated id.
   const res = await devicesREf.add({
     value: phVal,
@@ -32,8 +30,17 @@ exports.updatePh = onRequest(async (request, response) => {
   response.send({status: "OK"});
 });
 
-exports.helloWorldGet = onRequest((request, response) => {
-  logger.info("Hello logs!", {structuredData: true});
+exports.updateOrp = onRequest(async (request, response) => {
+  const deviceId = request.body.mac;
+  const val = parseFloat(request.body.orp);
+  const devicesREf = db.collection("prod/data/devices/" + deviceId + "/orp");
+  // // Add a new document with a generated id.
+  const res = await devicesREf.add({
+    value: val,
+    created_at: FieldValue.serverTimestamp(),
+  });
+
+  console.log("Added document with ID: ", res.id);
   response.send({status: "OK"});
 });
 

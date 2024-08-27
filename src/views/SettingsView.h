@@ -45,6 +45,8 @@ String ssid = preferences.getString(SSID_KEY, "");
 
  if (passwords.length() > 0 && ssid.length() > 0){
     connectWifi(ssid,passwords);
+     if(!WiFi.isConnected())return;
+    Blynk.begin(BLYNK_AUTH_TOKEN, ssid.c_str(), passwords.c_str());
  }else{
      LV_LOG_USER("NO WIFI setted");
  }
