@@ -2,19 +2,31 @@
 
 Probe phProbe2 = Probe(PH_PIN, PROBE_PH);
 void createHomeView(lv_obj_t *parent);
+static void update_ph_auto_state();
 
 lv_obj_t * createBlockPh(lv_obj_t *parent);
 lv_obj_t * createBlockOrp(lv_obj_t *parent);
 void my_timer(lv_timer_t * timer);
  lv_obj_t * labelPH;
-  lv_obj_t * labelORP;
- float phVal = 0;
-float orpVal = 0;
-
-//  static lv_subject_t  phvalue;
-//  static lv_subject_t orpvalue;
+lv_obj_t * labelORP;
+lv_obj_t * labelPH_mode;
 
 
+static void eventManager_statePh(byte event){
+     if(event == EVENT_STATE_PH_AUTO ){
+       update_ph_auto_state();
+        String mode_lbl = "";
+       if(phAuto == 1){
+        mode_lbl = "auto";
+       }else{
+        mode_lbl = "force " + String(phDosage) + " ml/h";
+       }
+       
+        lv_label_set_text(labelPH_mode, mode_lbl.c_str());
+
+    }
+    
+}
 
 void createHomeView(lv_obj_t *parent){
     static uint32_t user_data = 10;
@@ -57,7 +69,7 @@ static lv_coord_t row_dsc[] = {100,100, LV_GRID_TEMPLATE_LAST};
    }
 lv_timer_t * timerlv = lv_timer_create(my_timer, 1000*10,  &user_data);
  phVal =  phProbe2.readPH(&preferences);
-
+ EventsManager::shared().addHandler(eventManager_statePh);
 
 }
 
@@ -76,6 +88,14 @@ lv_obj_t * createBlockPh(lv_obj_t *parent){
       lv_label_set_text(labelPH, "...");
     lv_obj_center(labelPH);
     lv_obj_set_style_text_font(labelPH, &lv_font_montserrat_32, LV_PART_MAIN| LV_STATE_DEFAULT);
+
+
+    //ph dosage
+    labelPH_mode = lv_label_create(obj);
+    lv_label_set_text(labelPH_mode, "auto");
+     lv_obj_align(labelPH_mode,LV_ALIGN_BOTTOM_LEFT,-10,0);
+    // lv_obj_center(labelPH_mode);
+    lv_obj_set_style_text_font(labelPH_mode, &lv_font_montserrat_12, LV_PART_MAIN| LV_STATE_DEFAULT);
 
     static lv_style_t layout_style;
 	lv_style_init(&layout_style);
@@ -125,3 +145,6 @@ void my_timer(lv_timer_t * timerlv)
 
 }
 
+ void update_ph_auto_state(){
+  Serial.print("update_ph_auto_state");
+}

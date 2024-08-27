@@ -2,10 +2,14 @@
  #define BLYNK_TEMPLATE_ID "TMPL5SBIKrCyr"
 #define BLYNK_TEMPLATE_NAME "Pool Controller"
  #define BLYNK_AUTH_TOKEN "E4I5fTOZjOggStL57OhplNxTd0oHZqyV"
-#define BLYNK_FIRMWARE_VERSION        "0.1.0"
+#define BLYNK_FIRMWARE_VERSION        "0.2.0"
+
+float phVal = 0;
+float orpVal = 0;
+bool phAuto = 1;
+double phDosage = 0;
 
 #include "BlynkManager.h"
-
 #include <BlynkSimpleEsp32.h>
 
 
@@ -132,13 +136,14 @@ send_data();
 
 
 void sendPhToServer(){
-String n[2][2] = {{"mac",WiFi.macAddress().c_str()},{"ph",String(phVal)}};
+   Blynk.virtualWrite(phVal, millis()/10);
+// String n[2][2] = {{"mac",WiFi.macAddress().c_str()},{"ph",String(phVal)}};
   // sendPostRequest(SERVER_API_PH, "", SERVER_PORT,  n, 2 )  ;
-  Blynk.virtualWrite(V0, millis()/10);
+ 
 }
 
 void sendOrpToServer(){
- String n[2][2] = {{"mac",WiFi.macAddress().c_str()},{"orp",String(orpVal)}};
-sendPostRequest(SERVER_API_ORP, "", SERVER_PORT, n, 2 )  ;
+//  String n[2][2] = {{"mac",WiFi.macAddress().c_str()},{"orp",String(orpVal)}};
+// sendPostRequest(SERVER_API_ORP, "", SERVER_PORT, n, 2 )  ;
 }
 

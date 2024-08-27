@@ -9,7 +9,8 @@ struct HandlerObj
   bool isInit = false;
 };
 
-enum {EVENT_UPDATEWIFICONFIG, EVENT_CONNECTWIFI_OK,EVENT_CONNECTWIFI_ERROR } eventKey;
+enum {EVENT_UPDATEWIFICONFIG, EVENT_CONNECTWIFI_OK,EVENT_CONNECTWIFI_ERROR,
+EVENT_STATE_PH_AUTO } eventKey;
 
 class EventsManager{
     private:
