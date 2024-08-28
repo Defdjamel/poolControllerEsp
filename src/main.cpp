@@ -2,7 +2,7 @@
 //GLOBAL VAR
 float phVal = 0;
 float orpVal = 0;
-int phAuto = 0;//O: auto 1: PH FORCE 2: CHLORE FORCE
+float tempWater = 0;
 double phDosage = 0;
 double orpDosage = 0;
 
@@ -37,18 +37,20 @@ Preferences preferences;
 
 
 void my_log_cb(lv_log_level_t level, const char * buf);
-void pumpActive(int second, int8_t pump);
+void pumpActive(float second, int pump);
 void sendPhToServer();
 void sendOrpToServer();
 void send_data();
+void activatePumps();
 
 void timer_update_data(lv_timer_t * timer);
+void timer_activate_pump(lv_timer_t * timerlv);
+void  testTft();
 
 
 
-
-Probe phProbe = Probe(PH_PIN, PROBE_PH);
-// Probe orpProbe = Probe(PH_PIN, ORP_PH);
+Probe phProbe  = Probe(PH_PIN, PROBE_PH);
+Probe orpProbe = Probe(ORP_PIN, ORP_PH);
 
 void setup(void)
 {     
@@ -58,6 +60,8 @@ void setup(void)
   // while(!Serial);
   Serial.println("Pool Controller V1.0");
   setupDisplay();
+  // testTft();
+  // return;
   setupTouchScreen();
   preferences.begin(APP_NSP, false); 
  
@@ -71,9 +75,22 @@ String ssid = preferences.getString(SSID_KEY, "");
 tryConnectWifi();
 static uint32_t user_data = 10;
 lv_timer_t * my_timer_update_ph = lv_timer_create(timer_update_data, UPDATE_DATE_TIME,  &user_data);
+lv_timer_t * my_timer_pump = lv_timer_create(timer_activate_pump, TIMER_PUMP_SECOND *1000,  &user_data);
 send_data();
 
+
+//  pumpActive(1 , PH_PUMP);
+// pumpActive(2 , ORP_PUMP);
   
+}
+
+void testTft(){
+   tft.init();
+    tft.setRotation( 1 );
+
+  tft.fillScreen(TFT_WHITE);
+  tft.drawRect(0, 0, tft.width()/2, tft.height()/2, TFT_RED);
+  tft.drawCircle(10,10,50,TFT_YELLOW);
 }
 
 
@@ -90,7 +107,8 @@ void readOrp(){
   //float orpVal = orpProbe.readVoltage();
 }
 
-void pumpActive(float second, int8_t pump) {
+void pumpActive(float second, int pump) {
+   Serial.printf("pump active= %.1f , %d\r\n" , second,pump);
   pinMode(pump, OUTPUT);
   digitalWrite(pump, LOW);   
   delay(second*1000);              
@@ -116,6 +134,7 @@ void send_data(){
   if(!WiFi.isConnected())return;
 sendPhToServer();
 sendOrpToServer();
+ Blynk.virtualWrite(TEMP_WATER,(float) random(100, 200)/10);
 }
 
 
@@ -131,25 +150,31 @@ void sendOrpToServer(){
 //  String n[2][2] = {{"mac",WiFi.macAddress().c_str()},{"orp",String(orpVal)}};
 // sendPostRequest(SERVER_API_ORP, "", SERVER_PORT, n, 2 )  ;
 }
-
-
-
 void timer_activate_pump(lv_timer_t * timerlv)
 {
-  if(phAuto == 1){//force ph
+  activatePumps();
+}
+
+
+void activatePumps()
+{
+  if(phDosage > 0){//force ph
+   Serial.println("Force PH PUMP");
 
   //calculate nbr injection pour TIMER_PUMP_SECONd ORP_dosage 50ml/h
-  float nbrInjection_perHour = 60/TIMER_PUMP_SECOND*60 ;//12
+  float nbrInjection_perHour = 60 / (TIMER_PUMP_SECOND / 60) ;//12 for 5 min
   float mlPerinjection = phDosage/nbrInjection_perHour;// 200/12 ~= 16ml/injection
   float timePerinjection = mlPerinjection/PUMP_ML_PERSECOND ;//1.6s per injection
+
+   Serial.printf("nbrInjection_perHour= %.2f \r\n mlPerinjection= %.2f \r\n timePerinjection= %.2f\n\r",nbrInjection_perHour,mlPerinjection,timePerinjection);
 
   pumpActive(timePerinjection , PH_PUMP);
 
   }
-  if(phAuto==2){//force Orp
-  
+  if(orpDosage>0){//force Orp
+  Serial.println("Force Orp PUMP");
   //calculate nbr injection pour TIMER_PUMP_SECONd ORP_dosage 50ml/h
-  float nbrInjection_perHour = 60/TIMER_PUMP_SECOND*60 ;//12
+  float nbrInjection_perHour = 60/( TIMER_PUMP_SECOND / 60) ;//12
   float mlPerinjection = orpDosage/nbrInjection_perHour;// 200/12 ~= 16ml/injection
   float timePerinjection = mlPerinjection/PUMP_ML_PERSECOND ;//1.6s per injection
 
@@ -157,8 +182,9 @@ void timer_activate_pump(lv_timer_t * timerlv)
 
 
   }
-  if(phAuto == 0){//auto
-
+  if(phDosage == 0 && orpDosage == 0){
+    //auto
   }
+  
 
 }

@@ -21,10 +21,10 @@ static void eventManager_statePh(byte event){
         mode_ph_lbl = "auto";
         mode_orp_lbl = "auto";
         
-       if(phAuto == 1){
+       if(phDosage > 0){
         mode_ph_lbl = "force " + String(phDosage) + " ml/h";
        }
-       else if(phAuto == 2){
+      if(orpDosage > 0){
         mode_orp_lbl = "force " + String(orpDosage) + " ml/h";
        }
        
@@ -88,7 +88,7 @@ lv_obj_t * createBlockPh(lv_obj_t *parent){
     lv_obj_t *label = lv_label_create(obj);
     lv_label_set_text(label, "PH");
     lv_obj_set_align(label,LV_ALIGN_TOP_LEFT);
-    lv_obj_set_style_bg_color(obj,lv_color_hex(0xff0000), LV_PART_MAIN);//GREEN
+    lv_obj_set_style_bg_color(obj,lv_palette_main(LV_PALETTE_RED), LV_PART_MAIN);//GREEN #3498db
 
     labelPH = lv_label_create(obj);
     // lv_label_bind_text(label, bindVal, " %d ");

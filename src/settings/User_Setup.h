@@ -55,7 +55,7 @@
 //#define RPI_DISPLAY_TYPE // 20MHz maximum SPI
 
 // Only define one driver, the other ones must be commented out
-  // #define ILI9341_DRIVER       // Generic driver for common displays
+  //  #define ILI9341_DRIVER       // Generic driver for common displays
   #define ILI9341_2_DRIVER     // Alternative ILI9341 driver, see https://github.com/Bodmer/TFT_eSPI/issues/1172
 //#define ST7735_DRIVER      // Define additional parameters below for this display
 // #define ILI9163_DRIVER     // Define additional parameters below for this display
@@ -125,8 +125,8 @@
 // If colours are inverted (white shows as black) then uncomment one of the next
 // 2 lines try both options, one of the options should correct the inversion.
 
-//  #define TFT_INVERSION_ON
-  #define TFT_INVERSION_OFF
+  // #define TFT_INVERSION_ON
+   #define TFT_INVERSION_OFF
 
 
 // ##################################################################################
@@ -367,9 +367,9 @@
 // #define SPI_FREQUENCY   1000000
 // #define SPI_FREQUENCY   5000000
 // #define SPI_FREQUENCY  10000000
-// #define SPI_FREQUENCY  20000000
+ #define SPI_FREQUENCY  20000000
 //#define SPI_FREQUENCY  27000000
-#define SPI_FREQUENCY  55000000
+// #define SPI_FREQUENCY  55000000
 // #define SPI_FREQUENCY  55000000 // STM32 SPI1 only (SPI2 maximum is 27MHz)
 // #define SPI_FREQUENCY  80000000
 

@@ -10,7 +10,7 @@
 #define HOST_NAME "POOL CONTROLLER"
 #define UPDATE_DATE_TIME 1000*5*1
 
-#define TIMER_PUMP_SECOND 60*5
+#define TIMER_PUMP_SECOND 60*5 // 5min
 #define PUMP_ML_PERSECOND 10
 
 #endif
