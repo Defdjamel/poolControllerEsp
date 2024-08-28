@@ -61,14 +61,6 @@ void setup(void)
   setupTouchScreen();
   preferences.begin(APP_NSP, false); 
  
-  // Disconnect from an AP if it was previously connected
-  //WiFi.disconnect();
-  // pumpActive(2 , PH_PUMP);
-  //delay(2000);
-  // pumpActive(2 , ORP_PUMP);
-
- //phProbe.startCalibrationPH(gfx);
-//  connectWifi("WIFI_ssid" , "WIFI_password");
 
 
 createMainView();
@@ -86,7 +78,8 @@ send_data();
 
 
 void loop()
-{   Blynk.run();
+{     
+  if(WiFi.isConnected())Blynk.run();
   lv_task_handler();  // let the GUI do its work
   lv_tick_inc(5);     // tell LVGL how much time has passed
   delay(5);
@@ -97,7 +90,7 @@ void readOrp(){
   //float orpVal = orpProbe.readVoltage();
 }
 
-void pumpActive(int second, int8_t pump) {
+void pumpActive(float second, int8_t pump) {
   pinMode(pump, OUTPUT);
   digitalWrite(pump, LOW);   
   delay(second*1000);              
@@ -113,30 +106,59 @@ void my_log_cb(lv_log_level_t level, const char * buf)
    Serial.println(buf);
 }
 
-
-void send_data(){
-  if(!WiFi.isConnected())return;
-sendPhToServer();
-// sendOrpToServer();
-}
-
-
 void timer_update_data(lv_timer_t * timerlv)
 {
 send_data();
 }
 
 
+void send_data(){
+  if(!WiFi.isConnected())return;
+sendPhToServer();
+sendOrpToServer();
+}
+
+
 void sendPhToServer(){
-   Blynk.virtualWrite(phVal, millis()/10);
+   Blynk.virtualWrite(PH_VAL,phVal);
 // String n[2][2] = {{"mac",WiFi.macAddress().c_str()},{"ph",String(phVal)}};
   // sendPostRequest(SERVER_API_PH, "", SERVER_PORT,  n, 2 )  ;
  
 }
 
 void sendOrpToServer(){
-   Blynk.virtualWrite(phVal, millis()/10);
+   Blynk.virtualWrite(ORP_VAL, random(100, 200));
 //  String n[2][2] = {{"mac",WiFi.macAddress().c_str()},{"orp",String(orpVal)}};
 // sendPostRequest(SERVER_API_ORP, "", SERVER_PORT, n, 2 )  ;
 }
 
+
+
+void timer_activate_pump(lv_timer_t * timerlv)
+{
+  if(phAuto == 1){//force ph
+
+  //calculate nbr injection pour TIMER_PUMP_SECONd ORP_dosage 50ml/h
+  float nbrInjection_perHour = 60/TIMER_PUMP_SECOND*60 ;//12
+  float mlPerinjection = phDosage/nbrInjection_perHour;// 200/12 ~= 16ml/injection
+  float timePerinjection = mlPerinjection/PUMP_ML_PERSECOND ;//1.6s per injection
+
+  pumpActive(timePerinjection , PH_PUMP);
+
+  }
+  if(phAuto==2){//force Orp
+  
+  //calculate nbr injection pour TIMER_PUMP_SECONd ORP_dosage 50ml/h
+  float nbrInjection_perHour = 60/TIMER_PUMP_SECOND*60 ;//12
+  float mlPerinjection = orpDosage/nbrInjection_perHour;// 200/12 ~= 16ml/injection
+  float timePerinjection = mlPerinjection/PUMP_ML_PERSECOND ;//1.6s per injection
+
+  pumpActive(timePerinjection , ORP_PUMP);
+
+
+  }
+  if(phAuto == 0){//auto
+
+  }
+
+}

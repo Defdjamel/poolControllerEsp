@@ -6,7 +6,7 @@ EventsManager::EventsManager() {
 }
 
 void  EventsManager::callEvent(byte event){
-   LV_LOG_USER("callEvent %d",event);
+  //  LV_LOG_USER("callEvent %d",event);
     //dispath to all handler
     // for(int i =0 ; i< sizeof( handlers);i++){
     int count = 0;
@@ -27,8 +27,8 @@ void  EventsManager::callEvent(byte event){
 
 }
  void EventsManager::addHandler(Handler _handler){
-   LV_LOG_USER("event addHandler  ");
-  for(int i = 0; i < 10; i++) {
+  //  LV_LOG_USER("event addHandler  ");
+  for(int i = 0; i < 20; i++) {
   // for (HandlerObj handlerobj : handlersObj) {
    HandlerObj handlerobj = handlersObj[i];
      if(handlerobj.isInit == false){

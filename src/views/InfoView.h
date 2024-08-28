@@ -36,7 +36,7 @@ void createInfoView(lv_obj_t *parent)
     EventsManager::shared().addHandler(eventManager_info);
 
    lv_obj_t *  label = lv_label_create(parent);
-     lv_label_set_text(label,"Pool Controller by James ");
+     lv_label_set_text_fmt(label,"Pool Controller by James v:%s",BLYNK_FIRMWARE_VERSION);
       lv_obj_set_style_text_font(label, &lv_font_montserrat_12,LV_PART_MAIN| LV_STATE_DEFAULT);
      lv_obj_align(label, LV_ALIGN_BOTTOM_RIGHT, -5, -5);
 }
@@ -58,4 +58,10 @@ void updateListInfo(){
     }
      label = lv_label_create(listInfo);
      lv_label_set_text_fmt(label,"mac :  %s ",WiFi.macAddress().c_str());
+
+    lv_list_add_text(listInfo, "PUMP");
+    label = lv_label_create(listInfo);
+    lv_label_set_text_fmt(label,"PUMP DOSAGE:  %d ml/sec", PUMP_ML_PERSECOND);
+
+
 }
