@@ -2,9 +2,13 @@
 
 
 // Define server details and file path
+// https://github.com/Defdjamel/poolControllerEsp/raw/master/firmware.bin
+//https://s3.eu-west-1.amazonaws.com/pickme.today/firmware.bin
 
-#define HOST "firebasestorage.googleapis.com"
-#define PATH "/v0/b/poolcontroller-2fdec.appspot.com/o/firmware%2Ffirmware.bin?alt=media&token=29a81278-483c-4ee1-b41f-eb86b4878d13"
+//https://raw.githubusercontent.com/adityabangde/ESP32-OTA-Update-via-GitHub/dev/ota_code.bin
+//https://raw.githubusercontent.com/Defdjamel/poolControllerEsp/master/firmware.bin
+#define HOST "raw.githubusercontent.com"
+#define PATH "/Defdjamel/poolControllerEsp/master/firmware.bin"
 #define PORT 443
 
 // Define the name for the downloaded firmware file
