@@ -31,6 +31,18 @@ float Probe::readPH(Preferences *pref){
     return ph;
 }
 
+float Probe::readOrp(Preferences *pref){
+    float voltage = readVoltage();
+    Serial.printf("orpVoltage = %f  \n\r",voltage);
+    //get offset
+    float offset =  pref->getFloat(ORP_KEY_OFFSET, 0);
+    offset = 3.223 - 0.256; 
+
+    Serial.printf("offset= %f  \n\r",offset);
+    float orpv = voltage - offset;
+    return orpv;
+}
+
 void Probe::startCalibrationPH(){
     int timeProbing =30;
     // gfx->fillScreen(WHITE);

@@ -1,6 +1,7 @@
 #include <lvgl.h>
 
 Probe phProbe2 = Probe(PH_PIN, PROBE_PH);
+Probe orpProbe2 = Probe(ORP_PIN, ORP_PH);
 void createHomeView(lv_obj_t *parent);
 static void update_ph_auto_state();
 
@@ -149,13 +150,11 @@ lv_obj_t * createBlockOrp(lv_obj_t *parent){
 
 void my_timer(lv_timer_t * timerlv)
 {
-
+  orpVal = orpProbe2.readOrp(&preferences);
+   Serial.printf("orpProbe : %.2f \n\r", orpVal);
  phVal =  phProbe2.readPH(&preferences);
-  /*Use the user_data*/
-  uint32_t *user_data = (uint32_t*)timerlv->user_data;
-//   printf("my_timer called with user data: %d\n", timerlv->last_run);
   lv_label_set_text_fmt(labelPH,"%.1f", phVal);
-  lv_label_set_text_fmt(labelORP,"%d", timerlv->last_run/100);
+  lv_label_set_text_fmt(labelORP,"%.0f", orpVal*1000);
 
 }
 

@@ -10,6 +10,7 @@
 #define APP_NSP "NSP"
 #define PH_KEY_A "PH_KEY_A"
 #define PH_KEY_B "PH_KEY_B"
+#define ORP_KEY_OFFSET "ORP_KEY_OFFSET"
 #define SSID_KEY "SSID_KEY"
 #define PWD_KEY "PWD_KEY"
 

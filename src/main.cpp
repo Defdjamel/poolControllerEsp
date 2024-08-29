@@ -50,7 +50,7 @@ void  testTft();
 
 
 Probe phProbe  = Probe(PH_PIN, PROBE_PH);
-Probe orpProbe = Probe(ORP_PIN, ORP_PH);
+
 
 void setup(void)
 {     
@@ -146,7 +146,7 @@ void sendPhToServer(){
 }
 
 void sendOrpToServer(){
-   Blynk.virtualWrite(ORP_VAL, random(100, 200));
+   Blynk.virtualWrite(ORP_VAL, orpVal*1000);
 //  String n[2][2] = {{"mac",WiFi.macAddress().c_str()},{"orp",String(orpVal)}};
 // sendPostRequest(SERVER_API_ORP, "", SERVER_PORT, n, 2 )  ;
 }

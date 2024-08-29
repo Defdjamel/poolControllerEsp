@@ -19,6 +19,7 @@ public:
 Probe(uint8_t analogpin,byte type = PROBE_PH);
 float readVoltage();
 float readPH(Preferences *pref);
+float readOrp(Preferences *pref);
 void startCalibrationPH();
 bool checkCalibrationOK( float voltage1, float voltage2);
 
