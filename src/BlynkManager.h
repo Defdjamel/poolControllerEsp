@@ -1,7 +1,7 @@
  #define BLYNK_PRINT Serial
  #define BLYNK_TEMPLATE_ID "TMPL5SBIKrCyr"
 #define BLYNK_TEMPLATE_NAME "Pool Controller"
-#define BLYNK_DEVICE NAME "ESP32 QA"
+#define BLYNK_DEVICE NAME "ESP32_S1"
  #define BLYNK_AUTH_TOKEN "E4I5fTOZjOggStL57OhplNxTd0oHZqyV"
 #define BLYNK_FIRMWARE_VERSION        "0.2.0"
 

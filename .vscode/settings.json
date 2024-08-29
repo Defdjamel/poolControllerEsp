@@ -22,6 +22,8 @@
         "string_view": "cpp",
         "initializer_list": "cpp",
         "sstream": "cpp",
-        "custom_font.c": "cpp"
+        "custom_font.c": "cpp",
+        "*.tcc": "cpp",
+        "fstream": "cpp"
     }
 }

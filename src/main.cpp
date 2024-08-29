@@ -9,6 +9,14 @@ double orpDosage = 0;
 #include "BlynkManager.h"
 #include <BlynkSimpleEsp32.h>
 
+#include <FS.h>
+#include <WiFi.h>
+#include <SPIFFS.h>
+
+#include "Update.h"
+#include <WiFiClientSecure.h>
+
+
 
 
 #include "events/EventsManager.h"
@@ -25,6 +33,7 @@ Preferences preferences;
 
 #include "views/MainView.h"
 
+#include "OTA/ota.h"
 
 #if LV_USE_TFT_ESPI
 #include <TFT_eSPI.h>
@@ -33,6 +42,7 @@ Preferences preferences;
 #ifndef USE_PROBE_H
 #include "model/Probe.h"
 #endif 
+
 
 
 
@@ -78,7 +88,7 @@ lv_timer_t * my_timer_update_ph = lv_timer_create(timer_update_data, UPDATE_DATE
 lv_timer_t * my_timer_pump = lv_timer_create(timer_activate_pump, TIMER_PUMP_SECOND *1000,  &user_data);
 send_data();
 
-
+checkOTAUpdate();
 //  pumpActive(1 , PH_PUMP);
 // pumpActive(2 , ORP_PUMP);
   
