@@ -1,5 +1,5 @@
 
-
+#include <ArduinoJson.h>
 
 // Define server details and file path
 // https://github.com/Defdjamel/poolControllerEsp/raw/master/firmware.bin
@@ -23,9 +23,21 @@ void checkOTAUpdate(){
     return;
   }
 
+//get lastversion
+  String response  = sendPostRequest(SERVER_API_LASTVERSION, "", SERVER_PORT, {}, 0 )  ;
+  JsonDocument doc;
+  deserializeJson(doc, response);
+  float last_version =  doc[String("ESP")];
+  float current_version =  String(BLYNK_FIRMWARE_VERSION).toFloat();
+  Serial.printf("Version ESP : %.2f , current : %.2f \r\n",last_version,current_version);
+  if(last_version > current_version){
+    //update
+    Serial.printf("updating Firmaware %.2f...\r\n",last_version);
+    getFileFromServer();
+    performOTAUpdateFromSPIFFS();
+  }
+  return;
 
-  getFileFromServer();
-  performOTAUpdateFromSPIFFS();
 }
 
 void getFileFromServer() {

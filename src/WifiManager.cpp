@@ -2,6 +2,7 @@
 #include "helper/Constants.h"
 #include "events/EventsManager.h"
 #include <HTTPClient.h>
+#include <ArduinoJson.h>
 
 
 void connectWifi(String ssid, String  password){
@@ -111,7 +112,6 @@ String sendPostRequest(const char* host,const char* url, int port, String params
 
       Serial.println(webUrl);
 
-      //add mac address
 
     //  String msg = "{\"hello\":\"insecure\"}";
     http.begin(client,webUrl );
@@ -128,6 +128,11 @@ String sendPostRequest(const char* host,const char* url, int port, String params
           if (httpCode == HTTP_CODE_OK) {
              String payload = http.getString();
               http.end();
+
+              
+
+              Serial.print("JSON object = ");
+              Serial.println(payload);
              return payload;
           }
         } else {
@@ -138,7 +143,7 @@ String sendPostRequest(const char* host,const char* url, int port, String params
     
     http.end();
     
-    return "";
+    return "{}";
        
     
 }

@@ -4,6 +4,7 @@
 
 #define SERVER_API_PH "updateph-bgyc2ufj7q-uc.a.run.app"
 #define SERVER_API_ORP "updateorp-bgyc2ufj7q-uc.a.run.app"
+#define SERVER_API_LASTVERSION "getlastversion-bgyc2ufj7q-uc.a.run.app"
 
 #define SERVER_API_TEST "enck6olmho8um.x.pipedream.net"
 #define SERVER_PORT 443

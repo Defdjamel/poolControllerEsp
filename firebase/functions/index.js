@@ -44,10 +44,19 @@ exports.updateOrp = onRequest(async (request, response) => {
   response.send({status: "OK"});
 });
 
-exports.sayHello = onRequest(
-    (req, res) => {
+exports.getLastVersion = onRequest(
+    async (req, res) => {
+
+   const cityRef = db.collection('prod').doc('version');
+  const doc = await cityRef.get();
+  if (!doc.exists) {
+    console.log('No such document!');
+  } else {
+    console.log('Document data:', doc.data());
+}
+
         
-      res.status(200).send(req.body.mac);
+      res.status(200).send(doc.data());
     },
 );
 // test V1
