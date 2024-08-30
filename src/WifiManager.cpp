@@ -2,7 +2,7 @@
 #include "helper/Constants.h"
 #include "events/EventsManager.h"
 #include <HTTPClient.h>
-#include <ArduinoJson.h>
+// #include <ArduinoJson.h>
 
 
 void connectWifi(String ssid, String  password){

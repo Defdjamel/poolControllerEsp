@@ -76,7 +76,7 @@ void setupDisplay(){
       lv_init();
 
       tft.begin();          /* TFT init */
-      tft.setRotation( 1 ); /* Landscape orientation, flipped */
+      tft.setRotation(3 ); /* Landscape orientation, flipped */
 
       lv_disp_draw_buf_init( &draw_buf, buf, NULL, TFT_HOR_RES * TFT_VER_RES / 10 );
 
