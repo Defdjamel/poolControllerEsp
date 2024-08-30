@@ -1,4 +1,5 @@
 
+#include <ArduinoJson.h>
 
 // Define server details and file path
 // https://github.com/Defdjamel/poolControllerEsp/raw/master/firmware.bin
@@ -23,20 +24,19 @@ void checkOTAUpdate(){
   }
 
 //get lastversion
-  // String response  = sendPostRequest(SERVER_API_LASTVERSION, "", SERVER_PORT, {}, 0 )  ;
-  // JsonDocument doc;
-  // deserializeJson(doc, response);
-  // float last_version =  doc[String("ESP")];
-  // float current_version =  String(BLYNK_FIRMWARE_VERSION).toFloat();
-  // Serial.printf("Version ESP : %.2f , current : %.2f \r\n",last_version,current_version);
-  // if(last_version > current_version){
-  //   //update
-  //   Serial.printf("updating Firmaware %.2f...\r\n",last_version);
-  //   getFileFromServer();
-  //   performOTAUpdateFromSPIFFS();
-  // }
-   getFileFromServer();
+  String response  = sendPostRequest(SERVER_API_LASTVERSION, "", SERVER_PORT, {}, 0 )  ;
+  JsonDocument doc;
+  deserializeJson(doc, response);
+  float last_version =  doc[String("ESP")];
+  float current_version =  String(BLYNK_FIRMWARE_VERSION).toFloat();
+  Serial.printf("Version ESP : %.2f , current : %.2f \r\n",last_version,current_version);
+  if(last_version > current_version){
+    //update
+    Serial.printf("updating Firmaware %.2f...\r\n",last_version);
+    getFileFromServer();
     performOTAUpdateFromSPIFFS();
+  }
+  
   return;
 
 }
@@ -52,8 +52,8 @@ void getFileFromServer() {
     client.println("Connection: close\r\n"); // Close connection after response
     client.println(); // Send an empty line to indicate end of request headers
 
-    SPIFFS.remove("/" + String(FILE_NAME));
-    File file = SPIFFS.open("/" + String(FILE_NAME), "w");// Open file in SPIFFS for writing
+    // SPIFFS.remove("/" + String(FILE_NAME));
+    File file = SPIFFS.open("/" + String(FILE_NAME), "w",false);// Open file in SPIFFS for writing
     if (!file) {
       Serial.println("Failed to open file for writing");
       return;
