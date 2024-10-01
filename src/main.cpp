@@ -90,7 +90,7 @@ static uint32_t user_data = 10;
 lv_timer_t * my_timer_update_ph = lv_timer_create(timer_update_data, UPDATE_DATE_TIME,  &user_data);
 lv_timer_t * my_timer_pump = lv_timer_create(timer_activate_pump, TIMER_PUMP_SECOND *1000,  &user_data);
 send_data();
-// if(WiFi.isConnected())checkOTAUpdate();;
+ if(WiFi.isConnected())checkOTAUpdate();;
  
 //  pumpActive(1 , PH_PUMP);
 // pumpActive(2 , ORP_PUMP);
