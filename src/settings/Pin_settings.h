@@ -1,17 +1,27 @@
 // Touchscreen pins
 //#define XPT2046_IRQ 36   // T_IRQ
-#define XPT2046_MOSI 32  // T_DIN
-#define XPT2046_MISO 39  // T_OUT
-#define XPT2046_CLK 25   // T_CLK
-#define XPT2046_CS 33    // T_CS
+// #define XPT2046_MOSI  32  // T_DIN
+// #define XPT2046_MISO  39  // T_OUT
+// #define XPT2046_CLK  25   // T_CLK
+// #define XPT2046_CS  33    // T_CS
+
+//esP32s3
+#define XPT2046_MOSI 15//esp32 32  // T_DIN
+#define XPT2046_MISO 5 //esp32 39  // T_OUT
+#define XPT2046_CLK  17 //esp32 25   // T_CLK
+#define XPT2046_CS  16 //esp32 33    // T_CS
 
 // pumps
-#define PH_PUMP   19
-#define ORP_PUMP  18
+#define PH_PUMP   40 //19
+#define ORP_PUMP  39 //18
 
-//Probe
+// //Probe
 #define PH_PIN  36
 #define ORP_PIN  34
+//ESP32S3
+// #define PH_PIN 4 
+// #define ORP_PIN  6 
+
 
 // 21 22 I2C !
 

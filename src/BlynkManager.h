@@ -3,7 +3,7 @@
 #define BLYNK_TEMPLATE_NAME "Pool Controller"
 #define BLYNK_DEVICE NAME "ESP32_S1"
  #define BLYNK_AUTH_TOKEN "E4I5fTOZjOggStL57OhplNxTd0oHZqyV"
-#define BLYNK_FIRMWARE_VERSION        "0.90"
+#define BLYNK_FIRMWARE_VERSION        "1.01"
 
 #include <BlynkSimpleEsp32.h>
 #include "events/EventsManager.h"
@@ -50,13 +50,11 @@ BLYNK_WRITE(ORP_DOSAGE)
      EventsManager::shared().callEvent(EVENT_STATE_PH_AUTO);
 }
 
-
-
 BLYNK_CONNECTED() {
-     Serial.print(" Blynk.syncAll()");
-    Blynk.syncAll();
-    Blynk.syncVirtual(PH_DOSAGE);
-    Blynk.syncVirtual(TEMP_WATER);
-     Blynk.syncVirtual(ORP_DOSAGE);
+  Serial.print(" Blynk.syncAll()");
+  Blynk.syncAll();
+  Blynk.syncVirtual(PH_DOSAGE);
+  Blynk.syncVirtual(TEMP_WATER);
+  Blynk.syncVirtual(ORP_DOSAGE);
    
 }

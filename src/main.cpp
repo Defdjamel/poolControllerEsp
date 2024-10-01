@@ -69,7 +69,10 @@ void setup(void)
   // Serial.setDebugOutput(true);
   // while(!Serial);
   Serial.println("Pool Controller V1.0");
+   
   setupDisplay();
+   
+
   // testTft();
   // return;
   setupTouchScreen();
@@ -87,7 +90,7 @@ static uint32_t user_data = 10;
 lv_timer_t * my_timer_update_ph = lv_timer_create(timer_update_data, UPDATE_DATE_TIME,  &user_data);
 lv_timer_t * my_timer_pump = lv_timer_create(timer_activate_pump, TIMER_PUMP_SECOND *1000,  &user_data);
 send_data();
-if(WiFi.isConnected())checkOTAUpdate();;
+// if(WiFi.isConnected())checkOTAUpdate();;
  
 //  pumpActive(1 , PH_PUMP);
 // pumpActive(2 , ORP_PUMP);
@@ -106,7 +109,7 @@ void testTft(){
 
 void loop()
 {     
-  if(WiFi.isConnected())Blynk.run();
+  // if(WiFi.isConnected())Blynk.run();
   lv_task_handler();  // let the GUI do its work
   lv_tick_inc(5);     // tell LVGL how much time has passed
   delay(5);

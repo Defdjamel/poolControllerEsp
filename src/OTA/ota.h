@@ -7,6 +7,10 @@
 
 //https://raw.githubusercontent.com/adityabangde/ESP32-OTA-Update-via-GitHub/dev/ota_code.bin
 //https://raw.githubusercontent.com/Defdjamel/poolControllerEsp/master/firmware.bin
+
+// https://s3.eu-west-1.amazonaws.com/pickme.today/firmware.bin
+// #define HOST "s3.eu-west-1.amazonaws.com"
+// #define PATH "/pickme.today/firmware.bin"
 #define HOST "raw.githubusercontent.com"
 #define PATH "/Defdjamel/poolControllerEsp/master/firmware.bin"
 #define PORT 443
@@ -22,6 +26,7 @@ void checkOTAUpdate(){
     Serial.println("SPIFFS Mount Failed");
     return;
   }
+  SPIFFS.format();
 
 //get lastversion
   String response  = sendPostRequest(SERVER_API_LASTVERSION, "", SERVER_PORT, {}, 0 )  ;
@@ -32,7 +37,7 @@ void checkOTAUpdate(){
   Serial.printf("Version ESP : %.2f , current : %.2f \r\n",last_version,current_version);
   if(last_version > current_version){
     //update
-    Serial.printf("updating Firmaware %.2f...\r\n",last_version);
+    Serial.printf("updating to Firmware %.2f...\r\n",last_version);
     getFileFromServer();
     performOTAUpdateFromSPIFFS();
   }
