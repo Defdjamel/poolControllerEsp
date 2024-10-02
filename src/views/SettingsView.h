@@ -95,7 +95,7 @@ static void event_handler(lv_event_t * e)
           LV_LOG_USER("goto Click_orp_calibration:");
            else if((char*) obj->user_data == Click_wifi_setting){
             LV_LOG_USER("goto Click_wifi_setting:");
-             createWifiSettingView(list1->parent);
+              createWifiSettingView(list1->parent);
            
            }
         

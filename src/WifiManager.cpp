@@ -44,22 +44,25 @@ void connectWifi(String ssid, String  password){
 
 
 void scanForWifi(String wifiList[MaxWifiScan]){
+  
    String ssid;
   int32_t rssi;
   uint8_t encryptionType;
   uint8_t* bssid;
   int32_t channel;
-    // bool hidden;
   int scanResult;
 
-
-
-  Serial.println(F("Starting WiFi scan..."));
-   WiFi.disconnect();
-   WiFi.mode(WIFI_STA);
-
-  scanResult = WiFi.scanNetworks(/*async=*/false, /*hidden=*/true);
+  Serial.println("Starting WiFi scan...");
+  LV_LOG_USER( "Starting WiFi scan... ");
   
+  
+
+  WiFi.disconnect();
+  WiFi.mode(WIFI_STA);
+
+   
+  scanResult = WiFi.scanNetworks(/*async=*/false, /*hidden=*/true);
+
 
   if (scanResult == 0) {
     Serial.println(F("No networks found"));
@@ -72,7 +75,7 @@ void scanForWifi(String wifiList[MaxWifiScan]){
       WiFi.getNetworkInfo(i, ssid, encryptionType, rssi, bssid, channel);
      
     Serial.println(ssid.c_str());
-    wifiList[i] = ssid.c_str();
+     wifiList[i] = ssid.c_str();
       // Serial.printf(PSTR("  %02d: [CH %02d] [%02X:%02X:%02X:%02X:%02X:%02X] %ddBm %c %c %s\n"),
       //               i,
       //               channel,
@@ -89,6 +92,10 @@ void scanForWifi(String wifiList[MaxWifiScan]){
   }
 
 };
+
+ void scanTest(){
+  Serial.println("scanTest");
+ } 
 
 
 

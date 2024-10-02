@@ -9,10 +9,10 @@
 //https://raw.githubusercontent.com/Defdjamel/poolControllerEsp/master/firmware.bin
 
 // https://s3.eu-west-1.amazonaws.com/pickme.today/firmware.bin
-#define HOST "s3.eu-west-1.amazonaws.com"
-#define PATH "/pickme.today/firmware.bin"
-// #define HOST "raw.githubusercontent.com"
-// #define PATH "/Defdjamel/poolControllerEsp/master/firmware.bin"
+// #define HOST "s3.eu-west-1.amazonaws.com"
+// #define PATH "/pickme.today/firmware.bin"
+#define HOST "raw.githubusercontent.com"
+#define PATH "/Defdjamel/poolControllerEsp/master/firmware.bin"
 #define PORT 443
 
 // Define the name for the downloaded firmware file

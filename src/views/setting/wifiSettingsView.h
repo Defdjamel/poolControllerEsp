@@ -1,6 +1,6 @@
 #include <lvgl.h>
 #include "wifiSetPasswordView.h"
-
+#include "WifiManager.h"
 static lv_obj_t * wifiView;
 static lv_obj_t * listWifi;
 
@@ -56,22 +56,23 @@ static void event_handler_select_wifi(lv_event_t * e)
     lv_style_set_border_width(&layout_style, 0);
     lv_obj_add_style(listWifi, &layout_style, LV_PART_MAIN | LV_STATE_DEFAULT);
    
-    searchWifi();
+      searchWifi();
  }
 
 void searchWifi(){
     String wifiList[MaxWifiScan] ; 
-    lv_obj_t * cont = lv_win_get_content(wifiView); 
-    lv_obj_clean(listWifi);
+    // lv_obj_t * cont = lv_win_get_content(wifiView); 
+     lv_obj_clean(listWifi);
 
-    scanForWifi(wifiList);
-
-    lv_obj_t * btn;
+     scanForWifi(wifiList);
+ 
+     lv_obj_t * btn;
     
-     lv_list_add_text(listWifi, "Select a network :");
+      lv_list_add_text(listWifi, "Select a network :");
       for (int8_t i = 0; i < MaxWifiScan; i++) {
-        if(wifiList[i] != "")
-   btn = lv_list_add_btn(listWifi, LV_SYMBOL_WIFI, wifiList[i].c_str());
-    lv_obj_add_event_cb(btn, event_handler_select_wifi, LV_EVENT_CLICKED, NULL);
+        if(wifiList[i] != ""){
+           btn = lv_list_add_btn(listWifi, LV_SYMBOL_WIFI, wifiList[i].c_str());
+           lv_obj_add_event_cb(btn, event_handler_select_wifi, LV_EVENT_CLICKED, NULL);
+        }
       }
 }

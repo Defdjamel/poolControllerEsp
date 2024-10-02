@@ -45,8 +45,8 @@ void my_disp_flush( lv_disp_drv_t *disp_drv, const lv_area_t *area, lv_color_t *
  // if(touchscreen.tirqTouched() && touchscreen.touched()) {
    if (touch.zRaw != 0) {
     // Get Touchscreen points
-    int x = map(touch.x, TFT_HOR_RES, 0, 1, TFT_HOR_RES);
-    int y = map(touch.y, TFT_VER_RES, 0, 1, TFT_VER_RES);
+    int x = map(touch.x, 0,TFT_HOR_RES, 1, TFT_HOR_RES);
+    int y = map(touch.y, 0, TFT_VER_RES, 1, TFT_VER_RES);
     // x = touch.x;
     //   y = touch.y;
   //  z = p.z;

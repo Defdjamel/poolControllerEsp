@@ -214,29 +214,29 @@
 
 // For ESP32 Dev board (only tested with ILI9341 display)
 // The hardware SPI can be mapped to any pins
-// #define TFT_BL  42 // 21            // LED back-light control pin
-#define TFT_BL   21            // LED back-light control pin
+#define TFT_BL  42 // 21            // LED back-light control pin
+// #define TFT_BL   21            // LED back-light control pin
 #define TFT_BACKLIGHT_ON HIGH
 
 
-#define TFT_MISO 12
-#define TFT_MOSI 13
-#define TFT_SCLK 14
-#define TFT_CS   15  // Chip select control pin
-#define TFT_DC    2  // Data Command control pin
-#define TFT_RST  -1  // Set TFT_RST to -1 if display RESET is connected to ESP32 board RST
+// #define TFT_MISO 12
+// #define TFT_MOSI 13
+// #define TFT_SCLK 14
+// #define TFT_CS   15  // Chip select control pin
+// #define TFT_DC    2  // Data Command control pin
+// #define TFT_RST  -1  // Set TFT_RST to -1 if display RESET is connected to ESP32 board RST
 
-#define TOUCH_CS 16 //33     // Chip select pin (T_CS) of touch screen
+// #define TOUCH_CS 16 //33     // Chip select pin (T_CS) of touch screen
 
-// // ESP32 S3
-// #define TFT_MISO 38//39
-// #define TFT_MOSI 9 //13
-// #define TFT_SCLK 8 //14
-// #define TFT_CS   47 //15  // Chip select control pin
-// #define TFT_DC   48 // 2  // Data Command control pin
-// #define TFT_RST  37  // Set TFT_RST to -1 if display RESET is connected to ESP32 board RST
+// ESP32 S3
+#define TFT_MISO 38//39
+#define TFT_MOSI 9 //13
+#define TFT_SCLK 8 //14
+#define TFT_CS   47 //15  // Chip select control pin
+#define TFT_DC   48 // 2  // Data Command control pin
+#define TFT_RST  37  // Set TFT_RST to -1 if display RESET is connected to ESP32 board RST
 
-// #define TOUCH_CS 16 //33   
+#define TOUCH_CS 16 //33   
 
 // For ESP32 Dev board (only tested with GC9A01 display)
 // The hardware SPI can be mapped to any pins

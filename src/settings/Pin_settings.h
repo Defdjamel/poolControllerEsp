@@ -16,11 +16,11 @@
 #define ORP_PUMP  39 //18
 
 // //Probe
-#define PH_PIN  36
-#define ORP_PIN  34
+// #define PH_PIN  36
+// #define ORP_PIN  34
 //ESP32S3
-// #define PH_PIN 4 
-// #define ORP_PIN  6 
+#define PH_PIN 4 
+#define ORP_PIN  6 
 
 
 // 21 22 I2C !
