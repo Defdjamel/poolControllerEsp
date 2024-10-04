@@ -39,10 +39,10 @@ void checkOTAUpdate(){
   deserializeJson(doc, response);
   float last_version =  doc[String("ESP")];
   float current_version =  String(BLYNK_FIRMWARE_VERSION).toFloat();
-  Serial.printf("Version ESP : %.2f , current : %.2f \r\n",last_version,current_version);
+  Serial.printf("Version ESP : %.3f , current : %.3f \r\n",last_version,current_version);
   if( FORCE_UPDATE == 1 || (last_version > current_version) ){
     //update
-    Serial.printf("updating to Firmware %.2f...\r\n",last_version);
+    Serial.printf("updating to Firmware %.3f...\r\n",last_version);
     createOTAView(String(last_version));
     updateFirmware(URL);
   }else{
