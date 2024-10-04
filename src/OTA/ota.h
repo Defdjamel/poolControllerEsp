@@ -113,6 +113,8 @@ void updateFirmware(const char* firmwareUrl) {
         } else {
           Serial.printf("Erreur de mise à jour : %s\n", Update.errorString());
            lv_label_set_text(labelPercentageUpdating, Update.errorString());
+           delay(2000);
+            ESP.restart();
         }
       } else {
         Serial.println("Pas assez d'espace pour commencer la mise à jour.");
