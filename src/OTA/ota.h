@@ -134,7 +134,7 @@ void updateFirmware(const char* firmwareUrl) {
 void createOTAView(){
      lv_obj_t * otaView;
      otaView =lv_win_create(lv_scr_act(),45);
-    lv_win_add_title(otaView, "Updading");
+    lv_win_add_title(otaView, "Mise à jour en cours ...");
 
      lv_obj_t * cont = lv_win_get_content(otaView); 
 
