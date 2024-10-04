@@ -26,7 +26,7 @@
 // void performOTAUpdateFromSPIFFS();
 void updateFirmware(const char* firmwareUrl);
 void updateOtaView(float progress);
-void createOTAView(String lastVersion);
+void createOTAView(float lastVersion);
 lv_obj_t * arcUpdating;
 lv_obj_t * labelPercentageUpdating;
 
@@ -43,7 +43,7 @@ void checkOTAUpdate(){
   if( FORCE_UPDATE == 1 || (last_version > current_version) ){
     //update
     Serial.printf("updating to Firmware %.3f...\r\n",last_version);
-    createOTAView(String(last_version));
+    createOTAView(last_version);
     updateFirmware(URL);
   }else{
      Serial.println("app already in date");
@@ -68,7 +68,7 @@ void updateFirmware(const char* firmwareUrl) {
     if (contentLength > 0) {
       bool canBegin = Update.begin(contentLength);  // Commence la mise à jour avec la taille connue
       if (canBegin) {
-        Serial.println("Mise à jour commencée...");
+        Serial.println("Mise a jour commencée...");
         
         WiFiClient *stream = https.getStreamPtr();
         uint8_t buff[128] = { 0 };
@@ -131,7 +131,7 @@ void updateFirmware(const char* firmwareUrl) {
 }
 
   
-void createOTAView(String lastVersion){
+void createOTAView(float lastVersion){
      lv_obj_t * otaView;
      otaView =lv_win_create(lv_scr_act(),45);
     lv_win_add_title(otaView, "Mise à jour en cours ...");
@@ -165,7 +165,7 @@ void createOTAView(String lastVersion){
    lv_obj_t *lblVersion = lv_label_create(cont);
   lv_obj_align(lblVersion, LV_ALIGN_BOTTOM_MID, 0, 0);
   lv_obj_set_style_text_font(lblVersion,&lv_font_montserrat_16,LV_PART_MAIN);
-  lv_label_set_text(lblVersion, lastVersion.c_str());
+  lv_label_set_text_fmt(lblVersion,"%.3f%", lastVersion);
       
   loop();
 
