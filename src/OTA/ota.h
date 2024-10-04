@@ -26,7 +26,7 @@
 // void performOTAUpdateFromSPIFFS();
 void updateFirmware(const char* firmwareUrl);
 void updateOtaView(float progress);
-void createOTAView();
+void createOTAView(String lastVersion);
 lv_obj_t * arcUpdating;
 lv_obj_t * labelPercentageUpdating;
 
@@ -43,7 +43,7 @@ void checkOTAUpdate(){
   if( FORCE_UPDATE == 1 || (last_version > current_version) ){
     //update
     Serial.printf("updating to Firmware %.2f...\r\n",last_version);
-    createOTAView();
+    createOTAView(String(last_version));
     updateFirmware(URL);
   }else{
      Serial.println("app already in date");
@@ -131,7 +131,7 @@ void updateFirmware(const char* firmwareUrl) {
 }
 
   
-void createOTAView(){
+void createOTAView(String lastVersion){
      lv_obj_t * otaView;
      otaView =lv_win_create(lv_scr_act(),45);
     lv_win_add_title(otaView, "Mise à jour en cours ...");
@@ -161,6 +161,11 @@ void createOTAView(){
   lv_obj_align(labelPercentageUpdating, LV_ALIGN_CENTER, 0, 0);
   lv_obj_set_style_text_font(labelPercentageUpdating,&lv_font_montserrat_16,LV_PART_MAIN);
   lv_label_set_text(labelPercentageUpdating, "0%");
+
+   lv_obj_t *lblVersion = lv_label_create(cont);
+  lv_obj_align(lblVersion, LV_ALIGN_BOTTOM_MID, 0, 0);
+  lv_obj_set_style_text_font(lblVersion,&lv_font_montserrat_16,LV_PART_MAIN);
+  lv_label_set_text(lblVersion, lastVersion.c_str());
       
   loop();
 
