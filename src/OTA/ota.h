@@ -20,38 +20,36 @@
 
 // Define the name for the downloaded firmware file
 #define FILE_NAME "firmware.bin"
+#define FORCE_UPDATE 0
 
 // void getFileFromServer() ;
 // void performOTAUpdateFromSPIFFS();
 void updateFirmware(const char* firmwareUrl);
+void updateOtaView(float progress);
+void createOTAView();
+lv_obj_t * arcUpdating;
+lv_obj_t * labelPercentageUpdating;
 
 void checkOTAUpdate(){
-  if (!SPIFFS.begin(true)) {
-    Serial.println("SPIFFS Mount Failed");
-    return;
-  }
-  SPIFFS.format();
-
-//get lastversion
+ 
+   
+// get lastversion
   String response  = sendPostRequest(SERVER_API_LASTVERSION, "", SERVER_PORT, {}, 0 )  ;
   JsonDocument doc;
   deserializeJson(doc, response);
   float last_version =  doc[String("ESP")];
   float current_version =  String(BLYNK_FIRMWARE_VERSION).toFloat();
   Serial.printf("Version ESP : %.2f , current : %.2f \r\n",last_version,current_version);
-  if(last_version > current_version){
+  if( FORCE_UPDATE == 1 || (last_version > current_version) ){
     //update
     Serial.printf("updating to Firmware %.2f...\r\n",last_version);
-    // getFileFromServer();
-    // performOTAUpdateFromSPIFFS();
+    createOTAView();
     updateFirmware(URL);
   }else{
      Serial.println("app already in date");
   }
-  
-  return;
-
 }
+
 void updateFirmware(const char* firmwareUrl) {
   WiFiClientSecure client;
   client.setInsecure();  // Pour ignorer la validation SSL, ne pas utiliser en production
@@ -88,8 +86,9 @@ void updateFirmware(const char* firmwareUrl) {
 
           // Affiche seulement si l'avancement dépasse un seuil de 0.5%
           if (progress - previousProgress >= 1) {
-            Serial.printf("Avancement : %.2f%%\r", progress);
+            // Serial.printf("Avancement : %.2f%%\r", progress);
             previousProgress = progress;  // Met à jour le précédent pourcentage affiché
+            updateOtaView(progress);
           }
 
         // Pause légère pour éviter d'encombrer la sortie série
@@ -105,6 +104,7 @@ void updateFirmware(const char* firmwareUrl) {
         if (Update.end()) {
           if (Update.isFinished()) {
             Serial.println("Mise à jour réussie !");
+              lv_label_set_text(labelPercentageUpdating,"Mise à jour réussie !");
             Serial.println("Redémarrage en cours...");
             ESP.restart();
           } else {
@@ -112,9 +112,11 @@ void updateFirmware(const char* firmwareUrl) {
           }
         } else {
           Serial.printf("Erreur de mise à jour : %s\n", Update.errorString());
+           lv_label_set_text(labelPercentageUpdating, Update.errorString());
         }
       } else {
         Serial.println("Pas assez d'espace pour commencer la mise à jour.");
+         lv_label_set_text(labelPercentageUpdating, "Pas assez d'espace pour commencer la mise à jour.");
       }
     } else {
       Serial.println("Contenu invalide ou taille du fichier incorrecte.");
@@ -125,95 +127,46 @@ void updateFirmware(const char* firmwareUrl) {
 
   https.end();  // Terminer la connexion HTTPS
 }
-// void getFileFromServer() {
-//   WiFiClientSecure client;
-//   client.setInsecure(); // Set client to allow insecure connections
 
-//   if (client.connect(HOST, PORT)) { // Connect to the server
-//     Serial.println("Connected to server");
-//     client.print("GET " + String(PATH) + " HTTP/1.1\r\n"); // Send HTTP GET request
-//     client.print("Host: " + String(HOST) + "\r\n"); // Specify the host
-//     client.println("Connection: close\r\n"); // Close connection after response
-//     client.println(); // Send an empty line to indicate end of request headers
+  
+void createOTAView(){
+     lv_obj_t * otaView;
+     otaView =lv_win_create(lv_scr_act(),45);
+    lv_win_add_title(otaView, "Updading");
 
-//     // SPIFFS.remove("/" + String(FILE_NAME));
-//     File file = SPIFFS.open("/" + String(FILE_NAME), "w",false);// Open file in SPIFFS for writing
-//     if (!file) {
-//       Serial.println("Failed to open file for writing");
-//       return;
-//     }
+     lv_obj_t * cont = lv_win_get_content(otaView); 
 
-//     bool endOfHeaders = false;
-//     String headers = "";
-//     String http_response_code = "error";
-//     const size_t bufferSize = 1024; // Buffer size for reading data
-//     uint8_t buffer[bufferSize];
+  
 
-//     // Loop to read HTTP response headers
-//     while (client.connected() && !endOfHeaders) {
-//       if (client.available()) {
-//         char c = client.read();
-//         headers += c;
-//         if (headers.startsWith("HTTP/1.1")) {
-//           http_response_code = headers.substring(9, 12);
-//         }
-//         if (headers.endsWith("\r\n\r\n")) { // Check for end of headers
-//           endOfHeaders = true;
-//         }
-//       }
-//     }
+    static lv_style_t style_bg;
+    lv_style_init(&style_bg);
+    lv_style_set_bg_color(&style_bg, lv_color_black());  // Couleur de fond blanche
+    // Appliquer le style à la fenêtre
+    lv_obj_add_style(cont, &style_bg, LV_PART_MAIN);
 
-//     Serial.println("HTTP response code: " + http_response_code); // Print received headers
+   /*Create an Arc*/
+     arcUpdating = lv_arc_create(cont);
+    lv_obj_set_size(arcUpdating, 100, 100);
+    lv_arc_set_bg_angles(arcUpdating, 0, 360);
+      
+    lv_arc_set_value(arcUpdating, 0);
+    lv_obj_clear_flag(arcUpdating, LV_OBJ_FLAG_CLICKABLE);
+     lv_obj_remove_style(arcUpdating, NULL, LV_PART_KNOB);
+    lv_obj_align_to(arcUpdating, cont, LV_ALIGN_CENTER, 0  , 0);
+     lv_obj_add_style(arcUpdating, &style_bg, LV_PART_MAIN);
 
-//     // Loop to read and write raw data to file
-//     while (client.connected()) {
-//       if (client.available()) {
-//         size_t bytesRead = client.readBytes(buffer, bufferSize);
-//         file.write(buffer, bytesRead); // Write data to file
-//       }
-//     }
-//     file.close(); // Close the file
-//     client.stop(); // Close the client connection
-//     Serial.println("File saved successfully");
-//   }
-//   else {
-//     Serial.println("Failed to connect to server");
-//   }
-// }
+       labelPercentageUpdating = lv_label_create(cont);
+  lv_obj_align(labelPercentageUpdating, LV_ALIGN_CENTER, 0, 0);
+  lv_obj_set_style_text_font(labelPercentageUpdating,&lv_font_montserrat_16,LV_PART_MAIN);
+  lv_label_set_text(labelPercentageUpdating, "0%");
+      
+  loop();
 
 
-// void performOTAUpdateFromSPIFFS() {
-//   // Open the firmware file in SPIFFS for reading
-//   File file = SPIFFS.open("/" + String(FILE_NAME), FILE_READ);
-//   if (!file) {
-//     Serial.println("Failed to open file for reading");
-//     return;
-//   }
-
-//   Serial.println("Starting update..");
-//   size_t fileSize = file.size(); // Get the file size
-//   Serial.println(fileSize);
-
-//   // Begin OTA update process with specified size and flash destination
-//   if (!Update.begin(fileSize, U_FLASH)) {
-//     Serial.println("Cannot do the update");
-//     return;
-//   }
-
-//   // Write firmware data from file to OTA update
-//   Update.writeStream(file);
-
-//   // Complete the OTA update process
-//   if (Update.end()) {
-//     Serial.println("Successful update");
-//   }
-//   else {
-//     Serial.println("Error Occurred:" + String(Update.getError()));
-//     return;
-//   }
-
-//   file.close(); // Close the file
-//   Serial.println("Reset in 4 seconds....");
-//   delay(4000);
-//   ESP.restart(); // Restart ESP32 to apply the update
-// }
+}
+void updateOtaView(float progress){
+    lv_arc_set_value(arcUpdating,progress);
+    lv_label_set_text_fmt(labelPercentageUpdating, "%.0f%%", progress);
+    loop();
+    
+}
