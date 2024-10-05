@@ -3,7 +3,7 @@
 #define BLYNK_TEMPLATE_NAME "Pool Controller"
 #define BLYNK_DEVICE NAME "ESP32_S1"
  #define BLYNK_AUTH_TOKEN "E4I5fTOZjOggStL57OhplNxTd0oHZqyV"
-#define BLYNK_FIRMWARE_VERSION        "0.975"
+#define BLYNK_FIRMWARE_VERSION        "0.976"
 
 #include <BlynkSimpleEsp32.h>
 #include "events/EventsManager.h"
