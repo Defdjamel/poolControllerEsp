@@ -52,6 +52,7 @@ void sendPhToServer();
 void sendOrpToServer();
 void send_data();
 void activatePumps();
+static float getTimeInjection(float debitmlPerSecond,float freq,double dosage);
 
 void timer_update_data(lv_timer_t * timer);
 void timer_activate_pump(lv_timer_t * timerlv);
@@ -171,28 +172,19 @@ void timer_activate_pump(lv_timer_t * timerlv)
 }
 
 
-void activatePumps()
+void activatePumps()// every TIMER_PUMP_SECOND
 {
+  Serial.println("activatePumps");
   if(phDosage > 0){//force ph
    Serial.println("Force PH PUMP");
 
-  //calculate nbr injection pour TIMER_PUMP_SECONd ORP_dosage 50ml/h
-  float nbrInjection_perHour = 60 / (TIMER_PUMP_SECOND / 60) ;//12 for 5 min
-  float mlPerinjection = phDosage/nbrInjection_perHour;// 200/12 ~= 16ml/injection
-  float timePerinjection = mlPerinjection/PUMP_ML_PERSECOND ;//1.6s per injection
-
-   Serial.printf("nbrInjection_perHour= %.2f \r\n mlPerinjection= %.2f \r\n timePerinjection= %.2f\n\r",nbrInjection_perHour,mlPerinjection,timePerinjection);
-
+   float timePerinjection= getTimeInjection(PUMP_ML_PERSECOND,TIMER_PUMP_SECOND,phDosage);
   pumpActive(timePerinjection , PH_PUMP);
 
   }
   if(orpDosage>0){//force Orp
   Serial.println("Force Orp PUMP");
-  //calculate nbr injection pour TIMER_PUMP_SECONd ORP_dosage 50ml/h
-  float nbrInjection_perHour = 60/( TIMER_PUMP_SECOND / 60) ;//12
-  float mlPerinjection = orpDosage/nbrInjection_perHour;// 200/12 ~= 16ml/injection
-  float timePerinjection = mlPerinjection/PUMP_ML_PERSECOND ;//1.6s per injection
-
+ float timePerinjection= getTimeInjection(PUMP_ML_PERSECOND,TIMER_PUMP_SECOND,orpDosage);
   pumpActive(timePerinjection , ORP_PUMP);
 
 
@@ -200,7 +192,13 @@ void activatePumps()
   if(phDosage == 0 && orpDosage == 0){
     //auto
   }
-  
+}
+static float getTimeInjection(float debitmlPerSecond,float freq,double dosage){
+   float nbrInjection_perHour = 60/( freq / 60) ;//12
+  float mlPerinjection = dosage/nbrInjection_perHour;// 200m/12 ~= 16ml/injection for 200ml/h 
+  float timePerinjection = mlPerinjection/debitmlPerSecond ;//1.6s per injection
+  Serial.printf("nbrInjection_perHour= %.2f \r\n mlPerinjection= %.2f \r\n timePerinjection= %.2f\n\r",nbrInjection_perHour,mlPerinjection,timePerinjection);
+  return timePerinjection;
 
 }
 

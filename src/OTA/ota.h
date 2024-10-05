@@ -132,42 +132,54 @@ void updateFirmware(const char* firmwareUrl) {
 
   
 void createOTAView(float lastVersion){
-     lv_obj_t * otaView;
-     otaView =lv_win_create(lv_scr_act(),45);
-    lv_win_add_title(otaView, "Mise à jour en cours ...");
+      lv_obj_t * otaView;
+      otaView =lv_win_create(lv_scr_act(),45);
+      lv_win_add_title(otaView, "Mise a jour en cours ...");
 
-     lv_obj_t * cont = lv_win_get_content(otaView); 
+      lv_obj_t * cont = lv_win_get_content(otaView); 
 
-  
 
-    static lv_style_t style_bg;
-    lv_style_init(&style_bg);
-    lv_style_set_bg_color(&style_bg, lv_color_black());  // Couleur de fond blanche
-    // Appliquer le style à la fenêtre
-    lv_obj_add_style(cont, &style_bg, LV_PART_MAIN);
 
-   /*Create an Arc*/
-     arcUpdating = lv_arc_create(cont);
-    lv_obj_set_size(arcUpdating, 100, 100);
-    lv_arc_set_bg_angles(arcUpdating, 0, 360);
+      static lv_style_t style_bg;
+      lv_style_init(&style_bg);
+      lv_style_set_bg_color(&style_bg, lv_color_white());  // Couleur de fond blanche
+      // Appliquer le style à la fenêtre
+      lv_obj_add_style(cont, &style_bg, LV_PART_MAIN);
+
+      /*Create an Arc*/
+      arcUpdating = lv_arc_create(cont);
+      lv_obj_set_size(arcUpdating, 100, 100);
+      lv_arc_set_bg_angles(arcUpdating, 0, 360);
+
+      lv_arc_set_value(arcUpdating, 0);
+      lv_obj_clear_flag(arcUpdating, LV_OBJ_FLAG_CLICKABLE);
+      lv_obj_remove_style(arcUpdating, NULL, LV_PART_KNOB);
+      lv_obj_align_to(arcUpdating, cont, LV_ALIGN_CENTER, 0  , 0);
+      lv_obj_add_style(arcUpdating, &style_bg, LV_PART_MAIN);
+
+      /*Create a spinner*/
+      lv_obj_t * spinner = lv_spinner_create(cont, 1000, 60);
+      lv_obj_set_size(spinner, 78, 78);
+        lv_obj_set_style_arc_width(spinner, 2, LV_PART_INDICATOR); // Pour l'arc en cours
+    lv_obj_set_style_arc_width(spinner, 2, LV_PART_MAIN);  
+    // Définir l'opacité de l'arc à 200 (sur une échelle de 0 à 255)
+    lv_obj_set_style_opa(spinner, 200, LV_PART_INDICATOR);  // Opacité de l'arc en cours
+    lv_obj_set_style_opa(spinner, 200, LV_PART_MAIN);   
+      lv_obj_center(spinner);
+
+     
+
+      labelPercentageUpdating = lv_label_create(cont);
+      lv_obj_align(labelPercentageUpdating, LV_ALIGN_CENTER, 0, 0);
+      lv_obj_set_style_text_font(labelPercentageUpdating,&lv_font_montserrat_16,LV_PART_MAIN);
+      lv_label_set_text(labelPercentageUpdating, "0%");
+
+      lv_obj_t *lblVersion = lv_label_create(cont);
+      lv_obj_align(lblVersion, LV_ALIGN_BOTTOM_MID, 0, 0);
+      lv_obj_set_style_text_font(lblVersion,&lv_font_montserrat_16,LV_PART_MAIN);
+      lv_label_set_text_fmt(lblVersion,"%.3f%", lastVersion);
       
-    lv_arc_set_value(arcUpdating, 0);
-    lv_obj_clear_flag(arcUpdating, LV_OBJ_FLAG_CLICKABLE);
-     lv_obj_remove_style(arcUpdating, NULL, LV_PART_KNOB);
-    lv_obj_align_to(arcUpdating, cont, LV_ALIGN_CENTER, 0  , 0);
-     lv_obj_add_style(arcUpdating, &style_bg, LV_PART_MAIN);
-
-       labelPercentageUpdating = lv_label_create(cont);
-  lv_obj_align(labelPercentageUpdating, LV_ALIGN_CENTER, 0, 0);
-  lv_obj_set_style_text_font(labelPercentageUpdating,&lv_font_montserrat_16,LV_PART_MAIN);
-  lv_label_set_text(labelPercentageUpdating, "0%");
-
-   lv_obj_t *lblVersion = lv_label_create(cont);
-  lv_obj_align(lblVersion, LV_ALIGN_BOTTOM_MID, 0, 0);
-  lv_obj_set_style_text_font(lblVersion,&lv_font_montserrat_16,LV_PART_MAIN);
-  lv_label_set_text_fmt(lblVersion,"%.3f%", lastVersion);
-      
-  loop();
+  loop();//update UI
 
 
 }
