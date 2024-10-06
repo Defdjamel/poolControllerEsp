@@ -63,3 +63,23 @@ exports.getLastVersion = onRequest(
 exports.date = functions.https.onRequest((req, res) => {
   res.status(200).send("Hello get!");
 });
+exports.updateVersion = onRequest(async (request, response) => {
+  
+  const version = request.body.version;
+  const devicesRef = db.collection("prod").doc("version"); // Chemin vers le document à mettre à jour
+  
+  try {
+    // Mettre à jour la version dans le document "version"
+
+    const res = await devicesRef.set({
+      ESP: version
+    }, { merge: true });
+
+    console.log("Document mis à jour avec succès");
+    response.send({status: "OK", message: "Version updated successfully."});
+  } catch (error) {
+    console.error("Erreur lors de la mise à jour :", error);
+    response.status(500).send({status: "ERROR", message: "Failed to update version."});
+  }
+
+});
