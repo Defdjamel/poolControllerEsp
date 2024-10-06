@@ -16,7 +16,8 @@
 // #define HOST "raw.githubusercontent.com"
 // #define PATH "/Defdjamel/poolControllerEsp/master/firmware.bin"
 #define PORT 443
-#define URL "https://raw.githubusercontent.com/Defdjamel/poolControllerEsp/master/firmware.bin"
+// #define URL "https://raw.githubusercontent.com/Defdjamel/poolControllerEsp/master/firmware.bin"
+#define URL  "https://s3.eu-west-1.amazonaws.com/pickme.today/poolcontroller/firmware.bin"
 
 // Define the name for the downloaded firmware file
 #define FILE_NAME "firmware.bin"
@@ -68,6 +69,8 @@ void startFirmwareUpdate(const char *firmwareUrl) {
 
 // Définir une tâche pour la mise à jour du firmware
 void updateFirmwareTask(void *parameter) {
+
+
     const char *firmwareUrl = (const char *)parameter;
     WiFiClientSecure client;
     client.setInsecure();  // Pour ignorer la validation SSL, ne pas utiliser en production
